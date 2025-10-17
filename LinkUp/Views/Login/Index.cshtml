@@ -1,0 +1,30 @@
+﻿@model LoginViewModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="col-12 col-md-6 offset-md-3 ">
+    <div class="card">
+        <div class="card-header bg-success text-light"><h5 class="text-center">Iniciar Sesion</h5></div>
+        <div class="card-body">
+            <form asp-controller="Login" asp-action="Index" method="POST">
+                <div class="mb-3">
+                    <label asp-for="UserName" class="form-label">nombre de usuario:</label>
+                    <input class="form-control" asp-for="UserName" />
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label">password</label>
+                    <input class="form-control" asp-for="Password" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                
+                <div>
+                    <button type="submit" class="btn btn-outline-primary float-end"><i class="bi bi-floppy2"></i> Save</button>
+                    <a asp-controller="Login" asp-action="Register" class="btn btn-outline-warning float-end me-2"><i class="bi bi-arrow-left-short"></i> Registarse</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
