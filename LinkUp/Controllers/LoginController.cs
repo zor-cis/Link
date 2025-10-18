@@ -105,7 +105,7 @@ namespace LinkUp.Controllers
                 return View(vm);
             }
 
-            if (returnUser != null && !string.IsNullOrWhiteSpace(returnUser.Id)) 
+          if (returnUser != null && !string.IsNullOrWhiteSpace(returnUser.Id)) 
             { 
                 newUser.Id = returnUser.Id;
 

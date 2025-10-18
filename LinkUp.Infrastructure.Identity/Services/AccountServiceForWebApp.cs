@@ -167,6 +167,7 @@ namespace LinkUp.Infrastructure.Identity.Services
             }
 
             token = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(token));
+
             var result = await _userManager.ConfirmEmailAsync(user, token);
 
             if (result.Succeeded)

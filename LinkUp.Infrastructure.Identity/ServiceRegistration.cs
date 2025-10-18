@@ -39,7 +39,7 @@ namespace LinkUp.Infrastructure.Identity
 
             service.Configure<DataProtectionTokenProviderOptions>(opt =>
             {
-                opt.TokenLifespan = TimeSpan.FromHours(12);
+                opt.TokenLifespan = TimeSpan.FromHours(24);
             });
 
             service.AddAuthentication(opt =>
