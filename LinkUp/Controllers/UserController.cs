@@ -1,5 +1,7 @@
 using System.Diagnostics;
+using AutoMapper;
 using LinkUp.Core.Applicacion.Interfaces;
+using LinkUp.Core.Applicacion.ViewModel.User;
 using LinkUp.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,27 +11,26 @@ namespace LinkUp.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IAccountServiceForWebApp _service;
+        private readonly IMapper _mapper;
 
-        public UserController(ILogger<HomeController> logger, IAccountServiceForWebApp service)
+        public UserController(ILogger<HomeController> logger, IAccountServiceForWebApp service, IMapper mapper)
         {
             _logger = logger;
             _service = service;
+            _mapper = mapper;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var userName = User.Identity?.Name;
+            if(userName == null) 
+            { 
+                return RedirectToRoute(new { controller = "Login", action = "Index" });
+            }
+            var userDto = await _service.GetUserByUserName(userName);
+            var viewUser = new ProfileViewModel { UserProfile = _mapper.Map<UserViewModel>(userDto)};
+            return View("Index", viewUser);
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
     }
 }

@@ -1,11 +1,9 @@
-using System.Diagnostics;
 using AutoMapper;
 using LinkUp.Core.Applicacion.Dtos.User;
-using LinkUp.Core.Applicacion.Helpers;
 using LinkUp.Core.Applicacion.Interfaces;
 using LinkUp.Core.Applicacion.ViewModel.User;
+using LinkUp.Helpers;
 using LinkUp.Infrastructure.Identity;
-using LinkUp.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -65,14 +63,22 @@ namespace LinkUp.Controllers
                 return RedirectToRoute(new { controller = "Home", action = "Index"});
             }
 
+            TempData["ErrorMessage"] = login?.MessageError ?? "Error desconocido al iniciar sesion.";
             vm.Password = "";
             return View(vm);
+        }
+
+        public async Task<IActionResult> Logout() 
+        { 
+            await _service.SingOutAsync();
+            return RedirectToRoute(new { controller = "Login", action = "Index" });
+
         }
 
         public IActionResult Register()
         {
 
-            return View(new RegisterUserViewModel() { Id = "", Name = "", LastName = "", UserName = "", Email = "", Password = "", ConfirmPassword = "", PhoneNumber = ""});
+            return View(new RegisterUserViewModel() { Name = "", LastName = "", UserName = "", Email = "", Password = "", ConfirmPassword = "", PhoneNumber = ""});
         }
 
         [HttpPost]
@@ -86,7 +92,7 @@ namespace LinkUp.Controllers
                 return View(vm);
             }
 
-            string origin = Request.Headers.Origin.ToString() ?? string.Empty;
+            string origin = Request?.Headers?.Origin.ToString() ?? string.Empty;
             SaveUserDto newUser = _mapper.Map<SaveUserDto>(vm);
             
             newUser.ProfileImage = "";
@@ -95,19 +101,34 @@ namespace LinkUp.Controllers
 
             if(returnUser == null || returnUser!.HasError) 
             {
-                //Implementar aqui para errores
+                TempData["ErrorMessage"] = returnUser?.MessageError ?? "Error desconocido al registrar el usuario.";
                 return View(vm);
             }
 
             if (returnUser != null && !string.IsNullOrWhiteSpace(returnUser.Id)) 
             { 
                 newUser.Id = returnUser.Id;
-                newUser.ProfileImage = FileManager.Upload(vm.ProfileImage, newUser.Id, "Users");
+
+                if (vm.ProfileImage != null)
+                {
+                    string? uploadedPath = FileManager.Upload(vm.ProfileImage, newUser.Id, "Users");
+                    newUser.ProfileImage = uploadedPath;
+                }
+
                 await _service.EditUserAsync(newUser, origin);
             }
            
             return RedirectToRoute(new { controller = "Login", action = "Index" });
         }
+
+        public async Task<IActionResult> ConfirmEmail(string userId, string token) 
+        {
+            string response = await _service.ConfirmAccountAsync(userId, token);
+            return View("ConfirmEmail", response);
+        }
+
+         
+
 
         public async Task<IActionResult> AccessDenied()
         {

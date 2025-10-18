@@ -1,4 +1,5 @@
-﻿using LinkUp.Infrastructure.Shared.Services;
+﻿using LinkUp.Core.Domain.Settings;
+using LinkUp.Infrastructure.Shared.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,7 +11,7 @@ namespace LinkUp.Infrastructure.Shared
         {
             #region Context
 
-            service.Configure<EmailService>(confi.GetSection("EmailSetting"));
+            service.Configure<EmailSetting>(confi.GetSection("EmailSetting"));
 
             #endregion
 

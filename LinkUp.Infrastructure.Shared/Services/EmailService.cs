@@ -22,6 +22,7 @@ namespace LinkUp.Infrastructure.Shared.Services
             try
             {
                 dto.ToRange?.Add(dto.To ?? "");
+
                 MimeMessage Email = new()
                 {
                     Sender = MailboxAddress.Parse(_Email.EmailFrom),

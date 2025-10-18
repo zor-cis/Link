@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace LinkUp.Core.Applicacion.Helpers
+namespace LinkUp.Helpers
 {
     public static class FileManager
     {

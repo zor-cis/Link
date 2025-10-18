@@ -116,7 +116,6 @@ namespace LinkUp.Infrastructure.Identity.Services
 
             AppUser newUser = new()
             {
-                Id = register.Id,
                 Name = register.Name,
                 LastName = register.LastName,
                 UserName = register.UserName,
@@ -193,11 +192,11 @@ namespace LinkUp.Infrastructure.Identity.Services
                 Email = "",
                 PhoneNumber = "",
                 ProfileImage = "",
-                IsActive = true,
+                IsActive = false,
                 HasError = false
             };
 
-            var userWithSameUserName = await _userManager.FindByNameAsync(edit.UserName);
+            var userWithSameUserName = await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == edit.UserName && u.Id != edit.Id);
 
             if (userWithSameUserName != null)
             {
@@ -207,9 +206,9 @@ namespace LinkUp.Infrastructure.Identity.Services
             }
 
 
-            var userWithSameEmail = await _userManager.FindByEmailAsync(edit.Email);
+            var userWithSameEmail = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == edit.Email && u.Id != edit.Id);
 
-            if (userWithSameUserName != null)
+            if (userWithSameEmail != null)
             {
                 response.HasError = true;
                 response.MessageError = $"El correo {edit.UserName} ya tiene una cuenta registrada.";
@@ -232,14 +231,18 @@ namespace LinkUp.Infrastructure.Identity.Services
             user.Email = edit.Email;
             user.PhoneNumber = edit.PhoneNumber;
             user.ProfileImage = string.IsNullOrWhiteSpace(edit.ProfileImage) ? user.ProfileImage : edit.ProfileImage;
-            user.EmailConfirmed = user.Email == edit.Email;
+            
+            if (user.Email != edit.Email)
+            {
+                user.EmailConfirmed = false;
+            }
 
 
             var result = await _userManager.UpdateAsync(user);
 
             if (result.Succeeded)
             {
-                if (!user.EmailConfirmed)
+                if (!user.EmailConfirmed && user.Email != edit.Email)
                 {
                     string verificationUrlEmail = await GetVerificationEmailUrl(user, origin);
 
@@ -264,7 +267,7 @@ namespace LinkUp.Infrastructure.Identity.Services
                 response.Email = user.Email ?? "";
                 response.PhoneNumber = user.PhoneNumber ?? "";
                 response.ProfileImage = user.ProfileImage;
-                response.IsActive = user.EmailConfirmed;
+                response.IsActive = user.IsActive;
 
                 return response;
             }
@@ -441,7 +444,7 @@ namespace LinkUp.Infrastructure.Identity.Services
             token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
             var route = "Login/ConfirmEmail";
 
-            var completeUrl = new Uri(string.Concat($"{origin}/", route));
+            var completeUrl = new Uri(string.Concat(origin,"/",route));
 
             var verificationUri = QueryHelpers.AddQueryString(completeUrl.ToString(), "userId", user.Id);
             verificationUri = QueryHelpers.AddQueryString(verificationUri.ToString(), "token", token);

@@ -7,10 +7,18 @@
     <div class="card">
         <div class="card-header bg-success text-light"><h5 class="text-center">Iniciar Sesion</h5></div>
         <div class="card-body">
+
+             @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    @TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
             <form asp-controller="Login" asp-action="Register" method="POST" enctype="multipart/form-data">
                 
-                <input type="hidden" asp-for="Id"/>
-
                 <div class="mb-3">
                     <label asp-for="Name" class="form-label">Nombre</label>
                     <input class="form-control" asp-for="Name" />

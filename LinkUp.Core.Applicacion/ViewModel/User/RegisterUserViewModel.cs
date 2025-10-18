@@ -5,7 +5,6 @@ namespace LinkUp.Core.Applicacion.ViewModel.User
 {
     public class RegisterUserViewModel
     {
-        public required string Id { get; set; }
 
         [Required(ErrorMessage = "Ingrese el nombre")]
         [DataType(DataType.Text)]

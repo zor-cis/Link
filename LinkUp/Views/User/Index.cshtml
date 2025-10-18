@@ -1,0 +1,41 @@
+﻿@model ProfileViewModel
+
+@{
+    ViewData["Title"] = "Mi perfil";
+}
+
+<div class="container-fluid text-center">
+    <div class="row g-0" style="height: 100vh;">
+        <div class="col-4 bg-info d-flex align-items-center justify-content-center h-100">
+
+            <div class="card" style="width: 18rem;">
+                <img src="@Model.UserProfile?.ProfileImage" class="card-img-top" alt="@User.Identity?.Name">
+                <div class="card-body">
+                    <h4 class="card-title">@Model.UserProfile?.FullName</h4>
+                    <h5 class="card-title">@Model.UserProfile?.UserName</h5>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">@Model.UserProfile?.Email</li>
+                    <li class="list-group-item">@Model.UserProfile?.PhoneNumber</li>
+
+                    @if (Model.UserProfile?.IsActive == true)
+                    {
+                        <li class="list-group-item bg-success">Cuenta activa</li>
+                    }
+                    else
+                    {
+                        <li class="list-group-item bg-success">Cuenta inactiva</li>
+                    }
+                </ul>
+                <div class="card-body">
+                    <a href="#" class="card-link">Card link</a>
+                    <a href="#" class="card-link">Another link</a>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-8 bg-danger d-flex align-items-center justify-content-center h-100">
+            Column
+        </div>
+    </div>
+</div>
