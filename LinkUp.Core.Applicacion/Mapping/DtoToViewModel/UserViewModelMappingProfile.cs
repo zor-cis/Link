@@ -10,7 +10,11 @@ namespace LinkUp.Core.Applicacion.Mapping.DtoToViewModel
         {
             CreateMap<UserDto, UserViewModel>()
                 .ReverseMap();
-            
+
+            CreateMap<UserDto, EditUserViewModel>()
+                .ForMember(u => u.Password, dto => dto.Ignore())
+                .ForMember(u => u.ConfirmPassword, dto => dto.Ignore());
+
             CreateMap<EditUserResponseDto, UserViewModel>()
                 .ReverseMap();
             

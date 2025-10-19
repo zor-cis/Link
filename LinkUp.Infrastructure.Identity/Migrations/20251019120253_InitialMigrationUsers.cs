@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace LinkUp.Infrastructure.Identity.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigrationOnlyUsers : Migration
+    public partial class InitialMigrationUsers : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

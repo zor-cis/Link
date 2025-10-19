@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LinkUp.Infrastructure.Identity.Migrations
 {
     [DbContext(typeof(IdentityLinkUpContext))]
-    [Migration("20251016030550_InitialMigration-OnlyUsers")]
-    partial class InitialMigrationOnlyUsers
+    [Migration("20251019120253_InitialMigrationUsers")]
+    partial class InitialMigrationUsers
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

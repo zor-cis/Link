@@ -116,13 +116,13 @@ namespace LinkUp.Controllers
             return RedirectToRoute(new { controller = "Login", action = "Index" });
         }
 
-        public async Task<IActionResult> ConfirmEmail(string userId, string token) 
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
         {
             string response = await _service.ConfirmAccountAsync(userId, token);
             return View("ConfirmEmail", response);
         }
 
-         
+
 
 
         public async Task<IActionResult> AccessDenied()

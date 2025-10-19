@@ -6,36 +6,95 @@
 
 <div class="container-fluid text-center">
     <div class="row g-0" style="height: 100vh;">
-        <div class="col-4 bg-info d-flex align-items-center justify-content-center h-100">
 
-            <div class="card" style="width: 18rem;">
-                <img src="@Model.UserProfile?.ProfileImage" class="card-img-top" alt="@User.Identity?.Name">
-                <div class="card-body">
-                    <h4 class="card-title">@Model.UserProfile?.FullName</h4>
-                    <h5 class="card-title">@Model.UserProfile?.UserName</h5>
-                </div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">@Model.UserProfile?.Email</li>
-                    <li class="list-group-item">@Model.UserProfile?.PhoneNumber</li>
+        <div class="col-4 card d-flex flex-column align-items-center justify-content-start p-0">
+            <img src="@Model.UserProfile?.ProfileImage" class="card-img-top" alt="@User.Identity?.Name">
 
-                    @if (Model.UserProfile?.IsActive == true)
-                    {
-                        <li class="list-group-item bg-success">Cuenta activa</li>
-                    }
-                    else
-                    {
-                        <li class="list-group-item bg-success">Cuenta inactiva</li>
-                    }
-                </ul>
-                <div class="card-body">
-                    <a href="#" class="card-link">Card link</a>
-                    <a href="#" class="card-link">Another link</a>
+            <div class="card-body py-2">
+                <h4 class="card-title mb-1">@Model.UserProfile?.FullName</h4>
+                <h6 class="card-subtitle text-muted mb-0">@Model.UserProfile?.UserName</h6>
+            </div>
+
+            <ul class="list-group list-group-flush w-100">
+                <li class="list-group-item py-2">@Model.UserProfile?.Email</li>
+                <li class="list-group-item py-2">@Model.UserProfile?.PhoneNumber</li>
+                @if (Model.UserProfile?.IsActive == true)
+                {
+                    <li class="list-group-item text-success py-2">Cuenta activa</li>
+                }
+                else
+                {
+                    <li class="list-group-item text-danger py-2">Cuenta inactiva</li>
+                }
+            </ul>
+
+            <div class="card-body py-2">
+                <a href="#" class="card-link">Eliminar cuenta</a>
+            </div>
+        </div>
+
+
+        <div class="col-8 bg-danger d-flex align-items-center justify-content-center h-100">
+            
+            <div class="col-12 col-md-6 offset-md-3 ">
+
+                <div class="card">
+                    <div class="card-header bg-success text-light"><h5 class="text-center">Editar usuario </h5></div>
+                    <div class="card-body">
+                       
+                        <form asp-controller="User" asp-action="Edit" method="POST" enctype="multipart/form-data">
+                            <input type="hidden" asp-for="EditUserViewModel.Id" />
+
+                            <div class="mb-3">
+                                <label asp-for="EditUserViewModel.Name" class="form-label">Nombre:</label>
+                                <input class="form-control" asp-for="EditUserViewModel.Name" />
+                                <span asp-validation-for="EditUserViewModel.Name" class="text-danger"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="EditUserViewModel.LastName" class="form-label">Apellido:</label>
+                                <input class="form-control" asp-for="EditUserViewModel.LastName" />
+                                <span asp-validation-for="EditUserViewModel.LastName" class="text-danger"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="EditUserViewModel.UserName" class="form-label">Nombre de usuario:</label>
+                                <input class="form-control" asp-for="EditUserViewModel.UserName" />
+                                <span asp-validation-for="EditUserViewModel.UserName" class="text-danger"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="EditUserViewModel.Email" class="form-label">Correo electronico:</label>
+                                <input class="form-control" asp-for="EditUserViewModel.Email" />
+                                <span asp-validation-for="EditUserViewModel.Email" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="EditUserViewModel.PhoneNumber" class="form-label">Telefono :</label>
+                                <input class="form-control" asp-for="EditUserViewModel.PhoneNumber" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="EditUserViewModel.Password" class="form-label">Password:</label>
+                                <input class="form-control" asp-for="EditUserViewModel.Password" />
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="EditUserViewModel.ConfirmPassword" class="form-label">Confirm password:</label>
+                                <input class="form-control" asp-for="EditUserViewModel.ConfirmPassword" />
+                                <span asp-validation-for="EditUserViewModel.ConfirmPassword" class="text-danger"></span>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label asp-for="EditUserViewModel.ProfileImage" class="form-label">Foto de perfil:</label>
+                                <input class="form-control" asp-for="EditUserViewModel.ProfileImage" />
+                            </div>
+                            
+                            <div>
+                                <button type="submit" class="btn btn-outline-primary float-end"><i class="bi bi-floppy2"></i> Save</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
 
-        </div>
-        <div class="col-8 bg-danger d-flex align-items-center justify-content-center h-100">
-            Column
+
         </div>
     </div>
 </div>

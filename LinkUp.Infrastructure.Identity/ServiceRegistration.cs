@@ -19,17 +19,17 @@ namespace LinkUp.Infrastructure.Identity
 
             service.Configure<IdentityOptions>(opt =>
             {
-                opt.Password.RequiredLength = 8; 
+                opt.Password.RequiredLength = 8;
                 opt.Password.RequireNonAlphanumeric = true;
                 opt.Password.RequireDigit = true;
                 opt.Password.RequireLowercase = true;
-                opt.Password.RequireUppercase = true; 
+                opt.Password.RequireUppercase = true;
 
-                opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5); 
-                opt.Lockout.MaxFailedAccessAttempts = 5; 
+                opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                opt.Lockout.MaxFailedAccessAttempts = 5;
 
-                opt.User.RequireUniqueEmail = true; 
-                opt.SignIn.RequireConfirmedEmail = true; 
+                opt.User.RequireUniqueEmail = true;
+                opt.SignIn.RequireConfirmedEmail = true;
             });
 
             service.AddIdentityCore<AppUser>()
@@ -39,7 +39,7 @@ namespace LinkUp.Infrastructure.Identity
 
             service.Configure<DataProtectionTokenProviderOptions>(opt =>
             {
-                opt.TokenLifespan = TimeSpan.FromHours(24);
+                opt.TokenLifespan = TimeSpan.FromHours(12);
             });
 
             service.AddAuthentication(opt =>
@@ -51,7 +51,7 @@ namespace LinkUp.Infrastructure.Identity
             {
                 opt.ExpireTimeSpan = TimeSpan.FromMinutes(180);
                 opt.LoginPath = "/Login";
-                opt.AccessDeniedPath = "/Login/AccessDenied";  
+                opt.AccessDeniedPath = "/Login/AccessDenied";
             });
 
             #endregion

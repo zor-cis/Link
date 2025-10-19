@@ -28,7 +28,7 @@ namespace LinkUp.Controllers
                 return RedirectToRoute(new { controller = "Login", action = "Index" });
             }
             var userDto = await _service.GetUserByUserName(userName);
-            var viewUser = new ProfileViewModel { UserProfile = _mapper.Map<UserViewModel>(userDto)};
+            var viewUser = new ProfileViewModel { UserProfile = _mapper.Map<UserViewModel>(userDto), EditUserViewModel = _mapper.Map<EditUserViewModel>(userDto)};
             return View("Index", viewUser);
         }
 

@@ -122,8 +122,8 @@ namespace LinkUp.Infrastructure.Identity.Services
                 Email = register.Email,
                 PhoneNumber = register.PhoneNumber,
                 ProfileImage = register.ProfileImage,
-                IsActive = false,
-                EmailConfirmed = false
+                IsActive = true,
+                EmailConfirmed = true
             };
 
             var result = await _userManager.CreateAsync(newUser, register.Password);
@@ -435,8 +435,9 @@ namespace LinkUp.Infrastructure.Identity.Services
         {
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+                
             var route = "Login/ConfirmEmail";
-            var completeUrl = new Uri(string.Concat(origin, "/", route));// origin = https://localhost:58296 route=Login/ConfirmEmail
+            var completeUrl = new Uri(string.Concat(origin, "/", route));
             var verificationUri = QueryHelpers.AddQueryString(completeUrl.ToString(), "userId", user.Id);
             verificationUri = QueryHelpers.AddQueryString(verificationUri.ToString(), "token", token);
 
