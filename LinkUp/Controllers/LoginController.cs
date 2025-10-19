@@ -105,18 +105,13 @@ namespace LinkUp.Controllers
                 return View(vm);
             }
 
-          if (returnUser != null && !string.IsNullOrWhiteSpace(returnUser.Id)) 
-            { 
+
+          if(returnUser != null && !string.IsNullOrWhiteSpace(returnUser.Id)) 
+          {
                 newUser.Id = returnUser.Id;
-
-                if (vm.ProfileImage != null)
-                {
-                    string? uploadedPath = FileManager.Upload(vm.ProfileImage, newUser.Id, "Users");
-                    newUser.ProfileImage = uploadedPath;
-                }
-
-                await _service.EditUserAsync(newUser, origin);
-            }
+                newUser.ProfileImage = FileManager.Upload(vm.ProfileImage, newUser.Id, "Users");
+                await _service.EditUserAsync(newUser, origin, true);
+          } 
            
             return RedirectToRoute(new { controller = "Login", action = "Index" });
         }

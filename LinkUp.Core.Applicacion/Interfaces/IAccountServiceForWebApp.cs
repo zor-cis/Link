@@ -7,7 +7,7 @@ namespace LinkUp.Core.Applicacion.Interfaces
         Task<LoginResponseDto> AuthenticaAsync(LoginDto Login);
         Task<string> ConfirmAccountAsync(string userid, string token);
         Task<DeleteResponseDto> DeleteAsync(string Id);
-        Task<EditUserResponseDto> EditUserAsync(SaveUserDto edit, string origin);
+        Task<EditUserResponseDto> EditUserAsync(SaveUserDto edit, string origin, bool? isCreated = false);      
         Task<ForgotPasswordResponseDto> ForgotPasswordAsync(ForgotPasswordRequestDto forgotPassword);
         Task<List<UserDto>> GetAllUsersAsync(bool? isActive = true);
         Task<UserDto?> GetUserByEmail(string email);

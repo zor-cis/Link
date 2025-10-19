@@ -130,7 +130,7 @@ namespace LinkUp.Infrastructure.Identity.Services
 
             if (result.Succeeded)
             {
-                string verificationUrlEmail = await GetVerificationEmailUrl(newUser, origin);
+                string verificationUrlEmail = await GetVerificationEmailUri(newUser, origin);
 
                 await _emailService.SendEmailAsync(new EmailRequest()
                 {
@@ -158,32 +158,30 @@ namespace LinkUp.Infrastructure.Identity.Services
             }
         }
 
-        public async Task<string> ConfirmAccountAsync(string userid, string token)
+        public async Task<string> ConfirmAccountAsync(string userId, string token)
         {
-            var user = await _userManager.FindByIdAsync(userid);
+
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                return "No hay una cuenta registrada con este usuario";
+                return "There is no acccount registered with this user";
             }
 
             token = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(token));
-
             var result = await _userManager.ConfirmEmailAsync(user, token);
-
             if (result.Succeeded)
             {
-                user.IsActive = true;
-                await _userManager.UpdateAsync(user);
-                return $"La cuenta fue confirmada correctamente por {user.Email}. Puede usar la aplicacion";
+                return $"Account confirmed for {user.Email}. You can now use the app";
             }
             else
             {
-                return $"Error al intentar confirmar este correo: {user.Email}";
+                return $"An error occurred while confirming this email {user.Email}";
             }
         }
 
-        public async Task<EditUserResponseDto> EditUserAsync(SaveUserDto edit, string origin)
+        public async Task<EditUserResponseDto> EditUserAsync(SaveUserDto edit, string origin, bool? isCreated = false)
         {
+            bool isNotcreated = !isCreated ?? false;
             EditUserResponseDto response = new()
             {
                 Id = "",
@@ -197,8 +195,7 @@ namespace LinkUp.Infrastructure.Identity.Services
                 HasError = false
             };
 
-            var userWithSameUserName = await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == edit.UserName && u.Id != edit.Id);
-
+            var userWithSameUserName = await _userManager.Users.FirstOrDefaultAsync(w => w.UserName == edit.UserName && w.Id != edit.Id);
             if (userWithSameUserName != null)
             {
                 response.HasError = true;
@@ -207,8 +204,7 @@ namespace LinkUp.Infrastructure.Identity.Services
             }
 
 
-            var userWithSameEmail = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == edit.Email && u.Id != edit.Id);
-
+            var userWithSameEmail = await _userManager.Users.FirstOrDefaultAsync(w => w.Email == edit.Email && w.Id != edit.Id);
             if (userWithSameEmail != null)
             {
                 response.HasError = true;
@@ -232,20 +228,17 @@ namespace LinkUp.Infrastructure.Identity.Services
             user.Email = edit.Email;
             user.PhoneNumber = edit.PhoneNumber;
             user.ProfileImage = string.IsNullOrWhiteSpace(edit.ProfileImage) ? user.ProfileImage : edit.ProfileImage;
+            user.EmailConfirmed = user.EmailConfirmed && user.Email == edit.Email;
             
-            if (user.Email != edit.Email)
-            {
-                user.EmailConfirmed = false;
-            }
 
 
             var result = await _userManager.UpdateAsync(user);
 
             if (result.Succeeded)
             {
-                if (!user.EmailConfirmed && user.Email != edit.Email)
+                if (!user.EmailConfirmed && isNotcreated)
                 {
-                    string verificationUrlEmail = await GetVerificationEmailUrl(user, origin);
+                    string verificationUrlEmail = await GetVerificationEmailUri(user, origin);
 
                     await _emailService.SendEmailAsync(new EmailRequest()
                     {
@@ -438,17 +431,15 @@ namespace LinkUp.Infrastructure.Identity.Services
 
         #region Private Mathods 
 
-        private async Task<string> GetVerificationEmailUrl(AppUser user, string origin)
+        private async Task<string> GetVerificationEmailUri(AppUser user, string origin)
         {
-
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
             var route = "Login/ConfirmEmail";
-
-            var completeUrl = new Uri(string.Concat(origin,"/",route));
-
+            var completeUrl = new Uri(string.Concat(origin, "/", route));// origin = https://localhost:58296 route=Login/ConfirmEmail
             var verificationUri = QueryHelpers.AddQueryString(completeUrl.ToString(), "userId", user.Id);
             verificationUri = QueryHelpers.AddQueryString(verificationUri.ToString(), "token", token);
+
             return verificationUri;
         }
 

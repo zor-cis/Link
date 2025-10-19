@@ -4,7 +4,7 @@ namespace LinkUp.Helpers
 {
     public static class FileManager
     {
-        public static string? Upload(IFormFile file, string Id, string folderName, bool isEditMode = false, string? imagePath = "")
+        public static string? Upload(IFormFile? file, string Id, string folderName, bool isEditMode = false, string? imagePath = "")
         {
             if (isEditMode && file == null)
             {
