@@ -3,6 +3,6 @@
     public class ProfileViewModel
     {
         public UserViewModel? UserProfile { get; set; }
-        public EditUserViewModel? EditUserViewModel { get; set; }
+        public EditUserViewModel? EditUser{ get; set; }
     }
 }

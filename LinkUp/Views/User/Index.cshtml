@@ -43,47 +43,47 @@
                     <div class="card-body">
                        
                         <form asp-controller="User" asp-action="Edit" method="POST" enctype="multipart/form-data">
-                            <input type="hidden" asp-for="EditUserViewModel.Id" />
+                            <input type="hidden" asp-for="EditUser.Id" />
 
                             <div class="mb-3">
-                                <label asp-for="EditUserViewModel.Name" class="form-label">Nombre:</label>
-                                <input class="form-control" asp-for="EditUserViewModel.Name" />
-                                <span asp-validation-for="EditUserViewModel.Name" class="text-danger"></span>
+                                <label asp-for="EditUser.Name" class="form-label">Nombre:</label>
+                                <input class="form-control" asp-for="EditUser.Name" />
+                                <span asp-validation-for="EditUser.Name" class="text-danger"></span>
                             </div>
                             <div class="mb-3">
-                                <label asp-for="EditUserViewModel.LastName" class="form-label">Apellido:</label>
-                                <input class="form-control" asp-for="EditUserViewModel.LastName" />
-                                <span asp-validation-for="EditUserViewModel.LastName" class="text-danger"></span>
+                                <label asp-for="EditUser.LastName" class="form-label">Apellido:</label>
+                                <input class="form-control" asp-for="EditUser.LastName" />
+                                <span asp-validation-for="EditUser.LastName" class="text-danger"></span>
                             </div>
                             <div class="mb-3">
-                                <label asp-for="EditUserViewModel.UserName" class="form-label">Nombre de usuario:</label>
-                                <input class="form-control" asp-for="EditUserViewModel.UserName" />
-                                <span asp-validation-for="EditUserViewModel.UserName" class="text-danger"></span>
+                                <label asp-for="EditUser.UserName" class="form-label">Nombre de usuario:</label>
+                                <input class="form-control" asp-for="EditUser.UserName" />
+                                <span asp-validation-for="EditUser.UserName" class="text-danger"></span>
                             </div>
                             <div class="mb-3">
-                                <label asp-for="EditUserViewModel.Email" class="form-label">Correo electronico:</label>
-                                <input class="form-control" asp-for="EditUserViewModel.Email" />
-                                <span asp-validation-for="EditUserViewModel.Email" class="text-danger"></span>
-                            </div>
-
-                            <div class="mb-3">
-                                <label asp-for="EditUserViewModel.PhoneNumber" class="form-label">Telefono :</label>
-                                <input class="form-control" asp-for="EditUserViewModel.PhoneNumber" />
+                                <label asp-for="EditUser.Email" class="form-label">Correo electronico:</label>
+                                <input class="form-control" asp-for="EditUser.Email" />
+                                <span asp-validation-for="EditUser.Email" class="text-danger"></span>
                             </div>
 
                             <div class="mb-3">
-                                <label asp-for="EditUserViewModel.Password" class="form-label">Password:</label>
-                                <input class="form-control" asp-for="EditUserViewModel.Password" />
+                                <label asp-for="EditUser.PhoneNumber" class="form-label">Telefono :</label>
+                                <input class="form-control" asp-for="EditUser.PhoneNumber" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="EditUser.Password" class="form-label">Password:</label>
+                                <input class="form-control" asp-for="EditUser.Password" />
                             </div>
                             <div class="mb-3">
-                                <label asp-for="EditUserViewModel.ConfirmPassword" class="form-label">Confirm password:</label>
-                                <input class="form-control" asp-for="EditUserViewModel.ConfirmPassword" />
-                                <span asp-validation-for="EditUserViewModel.ConfirmPassword" class="text-danger"></span>
+                                <label asp-for="EditUser.ConfirmPassword" class="form-label">Confirm password:</label>
+                                <input class="form-control" asp-for="EditUser.ConfirmPassword" />
+                                <span asp-validation-for="EditUser.ConfirmPassword" class="text-danger"></span>
                             </div>
                             
                             <div class="mb-3">
-                                <label asp-for="EditUserViewModel.ProfileImage" class="form-label">Foto de perfil:</label>
-                                <input class="form-control" asp-for="EditUserViewModel.ProfileImage" />
+                                <label asp-for="EditUser.ProfileImage" class="form-label">Foto de perfil:</label>
+                                <input class="form-control" asp-for="EditUser.ProfileImage" />
                             </div>
                             
                             <div>
