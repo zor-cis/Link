@@ -3,6 +3,7 @@ using AutoMapper;
 using LinkUp.Core.Applicacion.Dtos.Publication;
 using LinkUp.Core.Applicacion.Interfaces;
 using LinkUp.Core.Applicacion.ViewModel.Publication;
+using LinkUp.Core.Domain.Common.Enum;
 using LinkUp.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -57,9 +58,12 @@ namespace LinkUp.Controllers
                 return RedirectToRoute(new { controller = "Home", action = "Index" });
             }
 
-            if (vm.ImageUrl != null)
+            if (vm.ImageUrl != null && vm.PublicationType == (int)PublicationType.Imagen)
             {
-                publicationDto.ImageUrl = FileManager.Upload(vm.ImageUrl, publication.Result!.Id.ToString(), "Publications", true);
+                var imagePath = FileManager.Upload(vm.ImageUrl, publication.Result!.Id.ToString(), "Publications", true);
+                publicationDto.ImageUrl = imagePath;
+                publication.Result!.ImageUrl = imagePath;
+
                 await _service.EditAsync(publicationDto, publication.Result!.Id);
             }
 

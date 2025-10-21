@@ -7,6 +7,7 @@ namespace LinkUp.Core.Domain.Entities
         public string? ImageUrl {  get; set; }
         public string? VideoUrl { get; set; }
         public required string UserId { get; set; }
+        public required string UserName { get; set; }
         public required DateTime CreateAt { get; set; }
 
         public ICollection<Reaction>? Reactions { get; set; }
