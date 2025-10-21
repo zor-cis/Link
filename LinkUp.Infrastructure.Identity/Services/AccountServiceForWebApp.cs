@@ -340,6 +340,30 @@ namespace LinkUp.Infrastructure.Identity.Services
             return result;
         }
 
+        public async Task<UserDto?> GetUserById(string Id)
+        {
+            var user = await _userManager.FindByIdAsync(Id);
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            var result = new UserDto
+            {
+                Id = user.Id,
+                Name = user.Name,
+                LastName = user.LastName ?? "",
+                UserName = user.UserName ?? "",
+                Email = user.Email ?? "",
+                PhoneNumber = user.PhoneNumber ?? "",
+                ProfileImage = user.ProfileImage ?? "",
+                IsActive = user.EmailConfirmed
+            };
+
+            return result;
+        }
+
         public async Task<UserDto?> GetUserByUserName(string username)
         {
             var user = await _userManager.FindByNameAsync(username);

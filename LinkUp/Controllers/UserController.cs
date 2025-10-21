@@ -1,23 +1,22 @@
-using System.Diagnostics;
 using AutoMapper;
 using LinkUp.Core.Applicacion.Dtos.User;
 using LinkUp.Core.Applicacion.Interfaces;
+using LinkUp.Core.Applicacion.ViewModel.Generic;
 using LinkUp.Core.Applicacion.ViewModel.User;
 using LinkUp.Helpers;
-using LinkUp.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LinkUp.Controllers
 {
+    [Authorize]
     public class UserController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
         private readonly IAccountServiceForWebApp _service;
         private readonly IMapper _mapper;
 
-        public UserController(ILogger<HomeController> logger, IAccountServiceForWebApp service, IMapper mapper)
+        public UserController(IAccountServiceForWebApp service, IMapper mapper)
         {
-            _logger = logger;
             _service = service;
             _mapper = mapper;
         }
@@ -36,33 +35,95 @@ namespace LinkUp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(EditUserViewModel vm) 
+        public async Task<IActionResult> Edit(EditUserViewModel vm)
         {
-            if (!ModelState.IsValid) 
+            var username = User.Identity?.Name;
+            var currenDto = await _service.GetUserByUserName(username!);
+            if (currenDto == null)
+            {
+                TempData["ErrorMessage"] = "No se pudo encontrar el usuario actual.";
+                return RedirectToRoute(new { controller = "Login", action = "Index" });
+            }
+
+            if (!ModelState.IsValid)
             {
                 vm.Password = "";
                 vm.ConfirmPassword = "";
-                View("Index", vm);
+                return View("Index", new ProfileViewModel
+                { 
+                        UserProfile = _mapper.Map<UserViewModel>(currenDto), 
+                        EditUser = vm
+                });
             }
 
-            string origin = Request.Headers.Origin.ToString() ?? string.Empty;
-            SaveUserDto userDto = _mapper.Map<SaveUserDto>(vm);
+            var origin = Request.Headers.Origin.ToString() ?? string.Empty;
+            var userDto = _mapper.Map<SaveUserDto>(vm);
 
-            var UserNameCurrent = User!.Identity!.Name!;
-            var currentDto = await _service.GetUserByUserName(UserNameCurrent);
-            string? currentImagePath = "";
-
-            if(currentDto != null) 
+            if (vm.ProfileImage != null)
             {
-                currentImagePath = currentDto.ProfileImage;
+                userDto.ProfileImage = FileManager.Upload(vm.ProfileImage, userDto.Id, "Users", true);
+            }
+            else 
+            { 
+                userDto.ProfileImage = currenDto.ProfileImage;
             }
 
-            userDto.ProfileImage = FileManager.Upload(vm.ProfileImage, userDto.Id, "Users", true);
-            var edit = await _service.EditUserAsync(userDto, origin);
+            var result = await _service.EditUserAsync(userDto, origin);
+            if (result.HasError) 
+            { 
+                TempData["ErrorMessage"] = result.MessageError ?? "Error desconocido";
+                return View("Index", new ProfileViewModel
+                {
+                    UserProfile = _mapper.Map<UserViewModel>(currenDto),
+                    EditUser = vm
+                });
+            }
 
-            var newEdit = new ProfileViewModel { EditUser = _mapper.Map<EditUserViewModel>(edit) };
-            return View("Index", newEdit);
+            var updateUser = await _service.GetUserByUserName(result.UserName);
+            return View("Index", new ProfileViewModel
+            {
+                UserProfile = _mapper.Map<UserViewModel>(updateUser),
+                EditUser = _mapper.Map<EditUserViewModel>(updateUser)
+            });
         }
 
+        public async Task<IActionResult> Delete(string Id) 
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["ErrorMessage"] = "Error en la solicitud";
+                return RedirectToRoute(new { controller = "User", action = "Index" });
+            }
+
+            var dto = await _service.GetUserById(Id);
+            if(dto == null)
+            {
+                TempData["ErrorMessage"] = "Usuario no encontrado";
+                return RedirectToRoute(new { controller = "User", action = "Index" });
+            }
+
+            DeleteViewModel vm = new DeleteViewModel
+            {
+                Id = dto.Id,
+                Name = dto.Name,
+                LastName = dto.LastName
+            };
+
+            return View("Delete", vm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(DeleteViewModel vm)
+        {
+            if (!ModelState.IsValid) 
+            { 
+                return View("Delete", vm);
+            }
+
+            await _service.DeleteAsync(vm.Id);
+            FileManager.Delete(vm.Id, "Users");
+
+            return RedirectToRoute(new { controller = "Login", action = "Index" });
+        }
     }
 }

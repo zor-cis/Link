@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using LinkUp.Core.Applicacion.Interfaces;
+using LinkUp.Core.Applicacion.Services;
+using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
 namespace LinkUp.Core.Applicacion
@@ -9,6 +11,14 @@ namespace LinkUp.Core.Applicacion
         {
             #region Configurations
             service.AddAutoMapper(cfg => { cfg.AddMaps(Assembly.GetExecutingAssembly()); });
+            #endregion
+
+            #region Services
+
+            service.AddScoped<IPublicationService, PublicationService>();
+            service.AddScoped<IPostCommenService, PostCommenService>();
+            service.AddScoped<IReactionService, ReactionService>();
+
             #endregion
         }
     }

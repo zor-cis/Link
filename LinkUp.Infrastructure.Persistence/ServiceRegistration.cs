@@ -35,8 +35,15 @@ namespace LinkUp.Infrastructure.Persistence
                 );
             }
             #endregion
-            
+
+            #region Repositories
+
             service.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            service.AddScoped<IPublicationRepository, PublicationRepository>();
+            service.AddScoped<IPostCommenRepository, PostCommenRepository>();
+            service.AddScoped<IReactionRepository, ReactionRepository>();
+
+            #endregion
         }
     }
 }

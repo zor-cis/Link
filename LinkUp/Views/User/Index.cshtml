@@ -29,72 +29,86 @@
             </ul>
 
             <div class="card-body py-2">
-                <a href="#" class="card-link">Eliminar cuenta</a>
+                <a class="card-link" asp-controller="User" asp-action="Delete" asp-route-id="@Model.UserProfile!.Id">Eliminar cuenta</a>
             </div>
         </div>
 
 
-        <div class="col-8 bg-danger d-flex align-items-center justify-content-center h-100">
-            
-            <div class="col-12 col-md-6 offset-md-3 ">
+        <div class="col-8 p-4">
 
-                <div class="card">
-                    <div class="card-header bg-success text-light"><h5 class="text-center">Editar usuario </h5></div>
-                    <div class="card-body">
-                       
-                        <form asp-controller="User" asp-action="Edit" method="POST" enctype="multipart/form-data">
-                            <input type="hidden" asp-for="EditUser.Id" />
+            <div class="card h-100">
+                <div class="card-header bg-success text-light">
+                    <h5 class="text-center">Editar usuario</h5>
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            @TempData["ErrorMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+                </div>
+                <div class="card-body">
+                    <form asp-controller="User" asp-action="Edit" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" asp-for="EditUser.Id" name="Id" />
 
-                            <div class="mb-3">
-                                <label asp-for="EditUser.Name" class="form-label">Nombre:</label>
-                                <input class="form-control" asp-for="EditUser.Name" />
-                                <span asp-validation-for="EditUser.Name" class="text-danger"></span>
-                            </div>
-                            <div class="mb-3">
-                                <label asp-for="EditUser.LastName" class="form-label">Apellido:</label>
-                                <input class="form-control" asp-for="EditUser.LastName" />
-                                <span asp-validation-for="EditUser.LastName" class="text-danger"></span>
-                            </div>
-                            <div class="mb-3">
-                                <label asp-for="EditUser.UserName" class="form-label">Nombre de usuario:</label>
-                                <input class="form-control" asp-for="EditUser.UserName" />
-                                <span asp-validation-for="EditUser.UserName" class="text-danger"></span>
-                            </div>
-                            <div class="mb-3">
-                                <label asp-for="EditUser.Email" class="form-label">Correo electronico:</label>
-                                <input class="form-control" asp-for="EditUser.Email" />
-                                <span asp-validation-for="EditUser.Email" class="text-danger"></span>
-                            </div>
+                        <div class="mb-3">
+                            <label asp-for="EditUser.Name" class="form-label">Nombre:</label>
+                            <input class="form-control" asp-for="EditUser.Name" name="Name" />
+                            <span asp-validation-for="EditUser.Name" class="text-danger"></span>
+                        </div>
 
-                            <div class="mb-3">
-                                <label asp-for="EditUser.PhoneNumber" class="form-label">Telefono :</label>
-                                <input class="form-control" asp-for="EditUser.PhoneNumber" />
-                            </div>
+                        <div class="mb-3">
+                            <label asp-for="EditUser.LastName" class="form-label">Apellido:</label>
+                            <input class="form-control" asp-for="EditUser.LastName" name="LastName" />
+                            <span asp-validation-for="EditUser.LastName" class="text-danger"></span>
+                        </div>
 
-                            <div class="mb-3">
-                                <label asp-for="EditUser.Password" class="form-label">Password:</label>
-                                <input class="form-control" asp-for="EditUser.Password" />
-                            </div>
-                            <div class="mb-3">
-                                <label asp-for="EditUser.ConfirmPassword" class="form-label">Confirm password:</label>
-                                <input class="form-control" asp-for="EditUser.ConfirmPassword" />
-                                <span asp-validation-for="EditUser.ConfirmPassword" class="text-danger"></span>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label asp-for="EditUser.ProfileImage" class="form-label">Foto de perfil:</label>
-                                <input class="form-control" asp-for="EditUser.ProfileImage" />
-                            </div>
-                            
-                            <div>
-                                <button type="submit" class="btn btn-outline-primary float-end"><i class="bi bi-floppy2"></i> Save</button>
-                            </div>
-                        </form>
-                    </div>
+                        <div class="mb-3">
+                            <label asp-for="EditUser.UserName" class="form-label">Nombre de usuario:</label>
+                            <input class="form-control" asp-for="EditUser.UserName" name="UserName" />
+                            <span asp-validation-for="EditUser.UserName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="EditUser.Email" class="form-label">Correo electrónico:</label>
+                            <input class="form-control" asp-for="EditUser.Email" name="Email" />
+                            <span asp-validation-for="EditUser.Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="EditUser.PhoneNumber" class="form-label">Teléfono:</label>
+                            <input class="form-control" asp-for="EditUser.PhoneNumber" name="PhoneNumber" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="EditUser.Password" class="form-label">Password:</label>
+                            <input class="form-control" asp-for="EditUser.Password" name="Password" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="EditUser.ConfirmPassword" class="form-label">Confirm password:</label>
+                            <input class="form-control" asp-for="EditUser.ConfirmPassword" name="ConfirmPassword" />
+                            <span asp-validation-for="EditUser.ConfirmPassword" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="EditUser.ProfileImage" class="form-label">Foto de perfil:</label>
+                            <input class="form-control" asp-for="EditUser.ProfileImage" name="ProfileImage" />
+                        </div>
+
+                        <div>
+                            <button type="submit" class="btn btn-outline-primary float-end">
+                                <i class="bi bi-floppy2"></i> Save
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
+
+        </div>
+
 
 
         </div>
     </div>
-</div>

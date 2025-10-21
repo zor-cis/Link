@@ -11,6 +11,7 @@ namespace LinkUp.Core.Applicacion.Interfaces
         Task<ForgotPasswordResponseDto> ForgotPasswordAsync(ForgotPasswordRequestDto forgotPassword);
         Task<List<UserDto>> GetAllUsersAsync(bool? isActive = true);
         Task<UserDto?> GetUserByEmail(string email);
+        Task<UserDto?> GetUserById(string Id);
         Task<UserDto?> GetUserByUserName(string username);
         Task<RegisterResponseDto> RegisterUserAsync(SaveUserDto register, string origin);
         Task<ForgotPasswordResponseDto> ResetPasswordAsync(ResetPasswordRequestDto resetPassword);
