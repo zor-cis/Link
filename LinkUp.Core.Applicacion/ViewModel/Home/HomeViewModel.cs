@@ -10,8 +10,6 @@ namespace LinkUp.Core.Applicacion.ViewModel.Home
 
 
         public CreatePostCommenViewModel? CreateCommen { get; set; }
-        public PostCommenViewModel? PostCommen { get; set; }
-
         public CreateReactionViewModel? CreateReaction { get; set; }
         public ReactionViewModel? Reaction { get; set; }
     }

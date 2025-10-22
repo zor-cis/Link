@@ -1,4 +1,5 @@
 ﻿using LinkUp.Core.Applicacion.ViewModel.Generic;
+using LinkUp.Core.Applicacion.ViewModel.PostCommen;
 
 namespace LinkUp.Core.Applicacion.ViewModel.Publication
 {
@@ -12,5 +13,8 @@ namespace LinkUp.Core.Applicacion.ViewModel.Publication
         public required int PublicationType { get; set; }
         public required int ReacctionsCount { get; set; }
         public required int CommentsCount { get; set; }
+
+        public List<PostCommenViewModel>? PostCommen { get; set; } = new List<PostCommenViewModel>();
+
     }
 }

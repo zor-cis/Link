@@ -7,5 +7,8 @@ namespace LinkUp.Core.Applicacion.Dtos.PostCommen
         public required string IdUser { get; set; }
         public required int IdPublication { get; set; }
         public required string Text { get; set; }
+
+        public required string UserName { get; set; }
+        public required string ProfileImage { get; set; }
     }
 }

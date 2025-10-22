@@ -23,6 +23,7 @@ namespace LinkUp.Infrastructure.Persistence.EntityConfigurations
             builder.Property(x => x.VideoUrl).HasMaxLength(int.MaxValue);
             builder.Property(x => x.CreateAt).IsRequired();
             builder.Property(x => x.UserName).HasMaxLength(30);
+            builder.Property(x => x.PublicationType).IsRequired();
 
             #endregion
             

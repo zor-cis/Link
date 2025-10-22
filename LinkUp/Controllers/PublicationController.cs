@@ -47,24 +47,22 @@ namespace LinkUp.Controllers
                 return View("CreatePublication", vm);
             }
 
-            var publicationDto = _mapper.Map<PublicationDto>(vm);
-            publicationDto.ImageUrl = "";
+            PublicationDto dto = _mapper.Map<PublicationDto>(vm);
+            dto.ImageUrl = "";
 
-            var publication = await _service.AddAsync(publicationDto);
+            var returnpublication = await _service.AddAsync(dto);
 
-            if (publication == null || publication.IsError)
+            if (returnpublication == null || returnpublication.IsError)
             {
-                TempData["ErrorMessage"] = publication?.MessageResult ?? "Error desconocido al crear publicación.";
+                TempData["ErrorMessage"] = returnpublication?.MessageResult ?? "Error desconocido al crear publicación.";
                 return RedirectToRoute(new { controller = "Home", action = "Index" });
             }
 
-            if (vm.ImageUrl != null && vm.PublicationType == (int)PublicationType.Imagen)
+            if (returnpublication != null && vm.PublicationType == (int)PublicationType.Imagen)
             {
-                var imagePath = FileManager.Upload(vm.ImageUrl, publication.Result!.Id.ToString(), "Publications", true);
-                publicationDto.ImageUrl = imagePath;
-                publication.Result!.ImageUrl = imagePath;
-
-                await _service.EditAsync(publicationDto, publication.Result!.Id);
+                dto.Id = returnpublication.Result!.Id;
+                dto.ImageUrl = FileManager.Upload(vm.ImageUrl, dto.Id.ToString(), "Publications");
+                await _service.EditAsync(dto, dto.Id);
             }
 
             return RedirectToRoute(new { controller = "Home", action = "Index" });

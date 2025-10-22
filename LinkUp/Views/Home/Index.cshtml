@@ -25,45 +25,105 @@
     {
         foreach (var item in Model.Publication)
         {
-            <div class="card shadow-sm border-0 rounded-4 mb-4 mx-auto" style="max-width: 650px;">
+            <div class="row mb-8 align-items-stretch">
 
-                @if (item.PublicationType == (int)PublicationType.Imagen)
-                {
-                    <img src="@item.ImageUrl"
-                         class="card-img-top img-fluid"
-                         alt="Publicación de @item.UserName"
-                         style="max-height: 350px; object-fit: cover;">
-                }
-                else if (item.PublicationType == (int)PublicationType.Video)
-                {
-                    <div class="ratio ratio-16x9">
-                        <iframe src="@item.VideoUrl"
-                                title="Video de @item.UserName"
-                                allowfullscreen
-                                style="border: none;"></iframe>
+                <div class="col-md-6">
+
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">@item.Name</h5>
+                            <p class="card-text"><small class="text-body-secondary">@item.UserName | @item.CreateAt.ToString("dd/MM/yyyy")</small></p>
+                        </div>
+
+                        @if (item.PublicationType == (int)PublicationType.Imagen)
+                        {
+                            <img src="@item.ImageUrl" class="card-img-bottom" alt="@item.Name">
+                        }
+                        else if (item.PublicationType == (int)PublicationType.Video)
+                        {
+                            <div class="ratio ratio-16x9">
+                                <iframe src="@item.VideoUrl" title="YouTube video" allowfullscreen></iframe>
+                            </div>
+                        }
+
+                        <div class="card-footer">
+                            <p class="card-text"><small class="text-body-secondary">Comentarios: @item.CommentsCount | Reacciones: @item.ReacctionsCount</small></p>
+
+                            <form asp-controller="Reaction" asp-action="Create" method="POST">
+                                <input type="hidden" asp-for="@Model.CreateReaction!.Id" name="Id" value="0" />
+                                <input type="hidden" asp-for="@Model.CreateReaction!.IdUser" name="IdUser" value="0" />
+                                <input type="hidden" asp-for="@Model.CreateReaction!.IdPublication" name="IdPublication" value="@item.Id" />
+
+                                <div class="mb-3">
+                                    <label asp-for="@Model.CreateReaction!.ReactionType" class="form-label">Reaccionar: </label>
+                                    <select asp-for="@Model.CreateReaction!.ReactionType" name="ReactionType" class="form-select">
+                                        <option value="0" disabled>--Seleccione una opcion--</option>
+                                        <option value="@((int)ReactionType.Like)">Me gusto</option>
+                                        <option value="@((int)ReactionType.Dislike)">No me gusto</option>
+                                    </select>
+                                    <span asp-validation-for="@Model.CreateReaction!.ReactionType" class="text-danger"></span>
+                                </div>
+
+                                <div>
+                                    <button type="submit" class="btn btn-outline-primary float-end"><i class="bi bi-floppy2"></i> Save</button>
+                                </div>
+                            </form>
+                        </div>
+
                     </div>
-                }
 
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <div>
-                            <h5 class="fw-bold mb-0">@item.UserName</h5>
-                            <small class="text-muted">@item.CreateAt.ToString("dd/MM/yyyy")</small>
-                        </div>
-                    </div>
+                </div>
 
-                    <p class="card-text mt-3">@item.Name</p>
+                <div class="col-md-6">
+                    <div class="card h-100">
 
-                    <div class="d-flex justify-content-between text-muted mt-3">
-                        <div>
-                            <i class="bi bi-heart-fill text-danger"></i> @item.ReacctionsCount
+                        <div class="card-header">
+                            <h6 class="mb-0">Comentarios</h6>
                         </div>
-                        <div>
-                            <i class="bi bi-chat-left-text"></i> @item.CommentsCount
+
+                        <div class="card-body" style="max-height: 400px;">
+
+                            @if (item.PostCommen == null || item.PostCommen.Count == 0)
+                            {
+                                <p class="text-muted text-center mt-3">No hay comentarios aún</p>
+                            }
+                            else
+                            {
+                                @foreach (var comment in item.PostCommen)
+                                {
+                                    <div class="mb-2 p-2 border-bottom">
+                                        <h5 class="h5">@item.UserName</h5>
+                                        <p class="mb-1">@comment.Text</p>
+                                    </div>
+                                }
+                            }
                         </div>
+
+                        <div class="card-footer">
+                            <form asp-controller="PostCommen" asp-action="Create" method="POST">
+                                <input type="hidden" asp-for="@Model.CreateCommen!.Id" name="Id"/>
+                                <input type="hidden" asp-for="@Model.CreateCommen!.IdUser" name="IdUser"/>
+                                <input type="hidden" asp-for="@Model.CreateCommen!.IdPublication" name="IdPublication" value="@item.Id" />
+
+                                <div class="form-floating">
+                                    <textarea asp-for="CreateCommen.Text" Name="Text" class="form-control" placeholder="Deja un comentario" id="floatingTextarea"></textarea>
+                                    <label asp-for="CreateCommen.Text" for="floatingTextarea">Comentar</label>
+                                    <span asp-validation-for="CreateCommen.Text" class="text-danger"></span>
+                                </div>
+
+                                <div>
+                                    <button type="submit" class="btn btn-outline-primary float-end"><i class="bi bi-floppy2"></i> Save</button>
+                                </div>
+                            </form>
+                        </div>
+
                     </div>
                 </div>
+
             </div>
+
+            
+            
         }
     }
 
