@@ -92,8 +92,28 @@
                                 @foreach (var comment in item.PostCommen)
                                 {
                                     <div class="mb-2 p-2 border-bottom">
-                                        <h5 class="h5">@item.UserName</h5>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <img src="@comment.ProfileImage" class="img-thumbnail rounded-circle" alt="Foto de perfil" width="32" height="32" />
+                                            <h5 class="h5 mb-0">@comment.UserName</h5>
+                                        </div>
                                         <p class="mb-1">@comment.Text</p>
+                                    </div>
+
+                                    <div class="mb-2 p-2 border-bottom">
+                                        <form asp-controller="Reply" asp-action="Create" method="POST">
+                                            <input type="hidden" asp-for="@Model.CreateReply!.Id" name="Id" />
+                                            <input type="hidden" asp-for="@Model.CreateReply!.IdUser" name="IdUser" />
+                                            <input type="hidden" asp-for="@Model.CreateReply!.IdPostComment" name="IdPostComment" value="@comment.Id" />
+
+                                            <div class="form-floating">
+                                                <textarea asp-for="@Model.CreateReply!.ReplyComment" Name="ReplyComment" class="form-control" placeholder="Deja una respuesta" id="floatingTextarea"></textarea>
+                                                <span asp-validation-for="@Model.CreateReply!.ReplyComment" class="text-danger"></span>
+                                            </div>
+
+                                            <div>
+                                                <button type="submit" class="btn btn-outline-primary float-end"><i class="bi bi-floppy2"></i> Save</button>
+                                            </div>
+                                        </form>
                                     </div>
                                 }
                             }

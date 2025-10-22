@@ -1,9 +1,9 @@
-using System.Diagnostics;
 using AutoMapper;
 using LinkUp.Core.Applicacion.Interfaces;
 using LinkUp.Core.Applicacion.ViewModel.Home;
 using LinkUp.Core.Applicacion.ViewModel.PostCommen;
 using LinkUp.Core.Applicacion.ViewModel.Publication;
+using LinkUp.Core.Applicacion.ViewModel.Reply;
 using LinkUp.Infrastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -48,7 +48,16 @@ namespace LinkUp.Controllers
                     IdPublication = 0,
                     Id = 0,
                     Text = ""
-                },
+                }, 
+
+                CreateReply = new CreateReplyViewModel 
+                { 
+                    Id = 0,
+                    IdPostComment = 0, 
+                    IdUser = userSession.Id,
+                    ReplyComment = ""
+                }
+
             };
 
             foreach (var publication in homeView.Publication) 

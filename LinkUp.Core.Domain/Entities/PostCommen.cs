@@ -8,5 +8,6 @@ namespace LinkUp.Core.Domain.Entities
         public required int IdPublication { get; set; }
         public Publication? Publication {  get; set; }
         public required string Text { get; set; }
+        public ICollection<Reply>? Replys { get; set; }
     }
 }

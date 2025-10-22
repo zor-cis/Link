@@ -11,6 +11,8 @@ namespace LinkUp.Infrastructure.Persistence.Contexts
         public DbSet<Publication> Publications { get; set; }
         public DbSet<PostCommen> PostCommens { get; set; }
         public DbSet<Reaction> Reactions { get; set; }
+        public DbSet<Reply> Reply { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
