@@ -10,6 +10,7 @@ namespace LinkUp.Core.Applicacion.Mapping.DtoToViewModel
         {
             CreateMap<PublicationDto, PublicationViewModel>()
                 .ForMember(x => x.PostCommen, dto => dto.Ignore())
+                .ForMember(x => x.Reaction, dto => dto.Ignore())
                 .ReverseMap()
                 .ForMember(x => x.UserId, dto => dto.Ignore());
 

@@ -1,0 +1,104 @@
+﻿@model FriendshipRequestViewModel
+
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="float-end">
+    <a asp-controller="FriendshipRequest" asp-action="NewFriend" class="btn btn-outline-secondary position-fixed">Agregar un nuevo amigo</a>
+</div>
+
+<div class="text-center">
+    <h1 class="display-4">Solicitudes de amistad</h1>
+</div>
+
+<div class="text-center">
+    <h1 class="fw-normal">Solicitudes recividas</h1>
+</div>
+
+<div>
+    @if (Model.receivedFriendships == null || Model.receivedFriendships!.Count == 0)
+    {
+        <div class="text-center mt-5">
+            <h5 class="text-muted">No has recibido solicitudes</h5>
+        </div>
+    }
+    else
+    {
+        foreach (var item in Model.receivedFriendships)
+        {
+            <div class="row">
+                <table class="table table-striped-columns">
+
+                    <tbody>
+                        <tr>
+                            <th scope="row">
+                                <img src="/@item.ImageProfileFriend" class="img-thumbnail" alt="Foto de perfil" width="50" height="50" />
+                            </th>
+                            <td>@item.NameUserFriend</td>
+                            <td>
+                                <form asp-controller="FriendshipRequest" asp-action="UpdateFriendship" method="POST">
+                                    <input type="hidden" asp-for="@Model.updateFriendship!.idFriendshipRequest" name="idFriendshipRequest" value="@item.Id"/>
+                                    <input type="hidden" asp-for="@Model.updateFriendship!.NewStatusFriendshipRequest" name="NewStatusFriendshipRequest" value="@((int)FriendshipRequestStatus.Accepted)" />
+                                    <button type="submit" class="btn btn-outline-primary float-end"><i class="bi bi-floppy2 me-1"></i>Aceptar</button>
+                                </form>
+                            </td>
+
+                            <td>
+                                <form asp-controller="FriendshipRequest" asp-action="UpdateFriendship" method="POST">
+                                    <input type="hidden" asp-for="@Model.updateFriendship!.idFriendshipRequest" name="idFriendshipRequest" value="@item.Id" />
+                                    <input type="hidden" asp-for="@Model.updateFriendship!.NewStatusFriendshipRequest" name="NewStatusFriendshipRequest" value="@((int)FriendshipRequestStatus.Rejected)" />
+                                    <button type="submit" class="btn btn-outline-primary float-end"><i class="bi bi-floppy2 me-1"></i>Rechazar</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+        }
+    }
+</div>
+
+
+
+
+
+<div class="text-center">
+    <h1 class="fw-normal">Solicitudes enviadas pendientes</h1>
+</div>
+
+<div>
+    @if (Model.sentFriendships == null || Model.sentFriendships!.Count == 0)
+    {
+        <div class="text-center mt-5">
+            <h5 class="text-muted">No has enviado solicitudes</h5>
+        </div>
+    }
+    else
+    {
+        foreach (var item in Model.sentFriendships)
+        {
+            <div class="row">
+                <table class="table table-striped-columns">
+
+                    <tbody>
+                        <tr>
+                            <th scope="row">
+                                <img src="/@item.ImageProfileFriend" class="img-thumbnail" alt="Foto de perfil" width="50" height="50" />
+                            </th>
+                            <td>@item.NameUserFriend</td>
+                            <td>@item.CommonFriendsCount</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+        }
+    }
+</div>
+
+
+

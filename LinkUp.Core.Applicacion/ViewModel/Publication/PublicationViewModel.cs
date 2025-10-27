@@ -1,5 +1,7 @@
 ﻿using LinkUp.Core.Applicacion.ViewModel.Generic;
 using LinkUp.Core.Applicacion.ViewModel.PostCommen;
+using LinkUp.Core.Applicacion.ViewModel.Reaction;
+using LinkUp.Core.Domain.Entities;
 
 namespace LinkUp.Core.Applicacion.ViewModel.Publication
 {
@@ -15,6 +17,7 @@ namespace LinkUp.Core.Applicacion.ViewModel.Publication
         public required int CommentsCount { get; set; }
 
         public List<PostCommenViewModel>? PostCommen { get; set; } = new List<PostCommenViewModel>();
+        public ReactionViewModel? Reaction {  get; set; }
 
     }
 }

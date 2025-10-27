@@ -7,5 +7,8 @@ namespace LinkUp.Core.Applicacion.Dtos.Reply
         public required string IdUser { get; set; }
         public required int IdPostComment { get; set; }
         public required string ReplyComment { get; set; }
+
+        public required string UserName { get; set; }
+        public required string ProfileImage { get; set; }
     }
 }

@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using AutoMapper;
 using LinkUp.Core.Applicacion.Dtos.Publication;
 using LinkUp.Core.Applicacion.Interfaces;

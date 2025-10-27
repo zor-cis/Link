@@ -12,6 +12,12 @@ namespace LinkUp.Infrastructure.Persistence.Contexts
         public DbSet<PostCommen> PostCommens { get; set; }
         public DbSet<Reaction> Reactions { get; set; }
         public DbSet<Reply> Reply { get; set; }
+        public DbSet<FriendshipRequest> FriendshipRequests { get; set; }
+        public DbSet<BattleshipGame> BattleshipGames { get; set; }
+        public DbSet<BattleshipBoard> BattleshipBoards { get; set; }
+        public DbSet<Ship> Ships { get; set; }
+        public DbSet<Cell> Cells { get; set; }
+        public DbSet<Attack> Attacks { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

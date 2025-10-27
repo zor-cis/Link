@@ -1,12 +1,7 @@
-using System.Diagnostics;
 using AutoMapper;
 using LinkUp.Core.Applicacion.Dtos.PostCommen;
-using LinkUp.Core.Applicacion.Dtos.Publication;
 using LinkUp.Core.Applicacion.Interfaces;
 using LinkUp.Core.Applicacion.ViewModel.PostCommen;
-using LinkUp.Core.Applicacion.ViewModel.Publication;
-using LinkUp.Core.Domain.Common.Enum;
-using LinkUp.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using LinkUp.Core.Applicacion.Dtos.PostCommen;
 using LinkUp.Core.Applicacion.Dtos.Reply;
 using LinkUp.Core.Applicacion.Dtos.Response;
 using LinkUp.Core.Applicacion.Interfaces;
@@ -9,25 +8,25 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LinkUp.Core.Applicacion.Services
 {
-    public class ReplyCommenService : GenericService<Reply, ReplyDto>, IReplyService
+    public class ReplyService : GenericService<Reply, ReplyDto>, IReplyService
     {
-        private readonly IPostCommenRepository _postCommenRepo;
+        private readonly IReplyRepository _replyRepo;
         private readonly IAccountServiceForWebApp _userService;
         private readonly IMapper _mapper;
-        public ReplyCommenService(IGenericRepository<Reply> repo, IMapper mapper, IPostCommenRepository postCommenRepo, IAccountServiceForWebApp userService) : base(repo, mapper)
+        public ReplyService(IGenericRepository<Reply> repo, IMapper mapper, IReplyRepository replyRepo, IAccountServiceForWebApp userService) : base(repo, mapper)
         {
-            _postCommenRepo = postCommenRepo;
+            _replyRepo = replyRepo;
             _mapper = mapper;
             _userService = userService;
         }
 
-       /* public async Task<ResponseDto<List<PostCommenDto>>?> GetAllByPublicationAsync(int IdPublication)
+       public async Task<ResponseDto<List<ReplyDto>>?> GetAllByCommentAsync(int IdComment)
         {
-            var response = new ResponseDto<List<PostCommenDto>>();
+            var response = new ResponseDto<List<ReplyDto>>();
             try
             {
-                var entities = await _postCommenRepo.GetQuery().Where(p => p.IdPublication == IdPublication).ToListAsync();
-                var dtos = _mapper.Map<List<PostCommenDto>>(entities);
+                var entities = await _replyRepo.GetQuery().Where(p => p.IdPostComment == IdComment).ToListAsync();
+                var dtos = _mapper.Map<List<ReplyDto>>(entities);
 
                 foreach(var dto in dtos) 
                 {
@@ -51,6 +50,6 @@ namespace LinkUp.Core.Applicacion.Services
             }
 
             return response;
-        }*/
+        }
     }
 }

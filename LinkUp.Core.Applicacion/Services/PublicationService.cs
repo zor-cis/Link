@@ -4,15 +4,20 @@ using LinkUp.Core.Applicacion.Dtos.Response;
 using LinkUp.Core.Applicacion.Interfaces;
 using LinkUp.Core.Domain.Entities;
 using LinkUp.Core.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace LinkUp.Core.Applicacion.Services
 {
     public class PublicationService : GenericService<Publication, PublicationDto>, IPublicationService
     {
         private readonly IAccountServiceForWebApp _user; 
-        public PublicationService(IGenericRepository<Publication> repo, IMapper mapper, IAccountServiceForWebApp user) : base(repo, mapper)
+        private readonly IPublicationRepository _publicationRepository;
+        private readonly IMapper _mapper;
+        public PublicationService(IGenericRepository<Publication> repo, IMapper mapper, IAccountServiceForWebApp user, IPublicationRepository publicationRepository) : base(repo, mapper)
         {
             _user = user;
+            _publicationRepository = publicationRepository;
+            _mapper = mapper;
         }
 
         public override async Task<ResponseDto<PublicationDto>?> AddAsync(PublicationDto dto)
@@ -40,6 +45,25 @@ namespace LinkUp.Core.Applicacion.Services
             dto.UserName = userName!.UserName;
 
             return await base.AddAsync(dto);
+        }
+
+        public async Task<ResponseDto<List<PublicationDto>>?> GetPublicationsByUserIdAsync(string IdUser)
+        {
+            var response = new ResponseDto<List<PublicationDto>>();
+            try
+            {
+                var entities = await _publicationRepository.GetQuery().Where(p => p.UserId == IdUser).ToListAsync();
+                var dtos = _mapper.Map<List<PublicationDto>>(entities);                
+                response.IsError = false;
+                response.Result = dtos;
+            }
+            catch (Exception ex)
+            {
+                response.IsError = true;
+                response.MessageResult = ex.Message;
+                return response;
+            }
+            return response;
         }
     }
 }

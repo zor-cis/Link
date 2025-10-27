@@ -18,6 +18,10 @@ namespace LinkUp.Core.Applicacion
             service.AddScoped<IPublicationService, PublicationService>();
             service.AddScoped<IPostCommenService, PostCommenService>();
             service.AddScoped<IReactionService, ReactionService>();
+            service.AddScoped<IReplyService, ReplyService>();
+            service.AddScoped<IFriendshipRequestService, FriendshipRequestService>();
+            service.AddScoped<IFriendService, FriendService>();
+            service.AddScoped<ISettingGameBattleShipService, SettingGameBattleShipService>();
 
             #endregion
         }

@@ -1,14 +1,8 @@
-using System.Diagnostics;
 using AutoMapper;
-using LinkUp.Core.Applicacion.Dtos.PostCommen;
-using LinkUp.Core.Applicacion.Dtos.Publication;
 using LinkUp.Core.Applicacion.Dtos.Reaction;
 using LinkUp.Core.Applicacion.Interfaces;
-using LinkUp.Core.Applicacion.ViewModel.PostCommen;
-using LinkUp.Core.Applicacion.ViewModel.Publication;
+using LinkUp.Core.Applicacion.ViewModel.Generic;
 using LinkUp.Core.Applicacion.ViewModel.Reaction;
-using LinkUp.Core.Domain.Common.Enum;
-using LinkUp.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,15 +26,10 @@ namespace LinkUp.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View("CreatePublication", vm);
+            return RedirectToRoute(new { controller = "Home", action = "Index" });
             }
 
-            var UserName = User!.Identity!.Name;
-            var UserDto = await _serviceUser.GetUserByUserName(UserName!);
-
             ReactionDto dto = _mapper.Map<ReactionDto>(vm);
-            dto.IdUser = UserDto!.Id;
-            dto.IdPublication = vm.IdPublication;
 
             var resultDto = await _service.AddAsync(dto);
 
@@ -50,6 +39,18 @@ namespace LinkUp.Controllers
                 return RedirectToRoute(new { controller = "Home", action = "Index" });
             }
 
+            return RedirectToRoute(new { controller = "Home", action = "Index" });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(DeleteViewModel vm) 
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("Delete", vm);
+            }
+
+            await _service.DeleteAsync(vm.Id);
             return RedirectToRoute(new { controller = "Home", action = "Index" });
         }
 

@@ -22,6 +22,35 @@ namespace LinkUp.Infrastructure.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("LinkUp.Core.Domain.Entities.FriendshipRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("FriendshipRequestStatus")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.Property<string>("IdUserAddressee")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IdUserRequester")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FriendshipRequests", (string)null);
+                });
+
             modelBuilder.Entity("LinkUp.Core.Domain.Entities.PostCommen", b =>
                 {
                     b.Property<int>("Id")
@@ -133,9 +162,6 @@ namespace LinkUp.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PostCommenId")
-                        .HasColumnType("int");
-
                     b.Property<string>("ReplyComment")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -143,7 +169,7 @@ namespace LinkUp.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PostCommenId");
+                    b.HasIndex("IdPostComment");
 
                     b.ToTable("Reply", (string)null);
                 });
@@ -174,7 +200,9 @@ namespace LinkUp.Infrastructure.Persistence.Migrations
                 {
                     b.HasOne("LinkUp.Core.Domain.Entities.PostCommen", "PostCommen")
                         .WithMany("Replys")
-                        .HasForeignKey("PostCommenId");
+                        .HasForeignKey("IdPostComment")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("PostCommen");
                 });

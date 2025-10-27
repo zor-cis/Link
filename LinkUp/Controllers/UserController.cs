@@ -102,7 +102,7 @@ namespace LinkUp.Controllers
                 return RedirectToRoute(new { controller = "User", action = "Index" });
             }
 
-            DeleteViewModel vm = new DeleteViewModel
+            DeleteUserViewModel vm = new DeleteUserViewModel
             {
                 Id = dto.Id,
                 Name = dto.Name,
@@ -113,7 +113,7 @@ namespace LinkUp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(DeleteViewModel vm)
+        public async Task<IActionResult> Delete(DeleteUserViewModel vm)
         {
             if (!ModelState.IsValid) 
             { 

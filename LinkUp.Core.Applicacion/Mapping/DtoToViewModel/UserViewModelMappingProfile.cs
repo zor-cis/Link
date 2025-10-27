@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using LinkUp.Core.Applicacion.Dtos.User;
+using LinkUp.Core.Applicacion.ViewModel.BattleShip;
+using LinkUp.Core.Applicacion.ViewModel.FriendshipRequest;
 using LinkUp.Core.Applicacion.ViewModel.User;
 
 namespace LinkUp.Core.Applicacion.Mapping.DtoToViewModel
@@ -34,7 +36,21 @@ namespace LinkUp.Core.Applicacion.Mapping.DtoToViewModel
             
             CreateMap<SaveUserDto, EditUserViewModel>()
                 .ForMember(u => u.ConfirmPassword, dto => dto.Ignore())
-                .ReverseMap();   
+                .ReverseMap();
+
+            CreateMap<UserDto, NonFriendsViewModel>()
+                .ReverseMap()
+                .ForMember(u => u.Email, vm => vm.Ignore())
+                .ForMember(u => u.PhoneNumber, vm => vm.Ignore())
+                .ForMember(u => u.IsActive, vm => vm.Ignore());
+
+            CreateMap<UserDto, FriendsForBattleShipGameViewModel>()
+                .ReverseMap()
+                .ForMember(u => u.Name, vm => vm.Ignore())
+                .ForMember(u => u.LastName, vm => vm.Ignore())
+                .ForMember(u => u.Email, vm => vm.Ignore())
+                .ForMember(u => u.PhoneNumber, vm => vm.Ignore())
+                .ForMember(u => u.IsActive, vm => vm.Ignore());
         }
     }
 }

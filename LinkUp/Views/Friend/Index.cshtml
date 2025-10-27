@@ -1,0 +1,220 @@
+﻿@model FriendAndPublicationViewModel
+
+@{
+    ViewData["Title"] = "Amigos";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Panel de publicaciones y amigos</h1>
+</div>
+
+
+<div class="text-center">
+    <p class="fw-normal">Solicitudes enviadas pendientes</p>
+</div>
+
+<div>
+    @if (Model.Friends == null || Model.Friends!.Count == 0)
+    {
+        <div class="text-center mt-5">
+            <h5 class="text-muted">Mis amigos</h5>
+        </div>
+    }
+    else
+    {
+        foreach (var item in Model.Friends)
+        {
+            <div class="row">
+                <table class="table table-striped-columns">
+
+                    <tbody>
+                        <tr>
+                            <th scope="row">
+                                <img src="/@item.ImageProfileFriend" class="img-thumbnail" alt="Foto de perfil" width="50" height="50" />
+                            </th>
+                            <td>@item.NameUserFriend</td>
+                            <td>
+                                <form asp-controller="FriendshipRequest" asp-action="DeleteFriendship" method="POST">
+                                    <input type="hidden" asp-for="@Model.DeleteView!.Id" name="Id" value="@item.Id" />
+                                    <button type="submit" class="btn btn-outline-danger float-end"><i class="bi bi-trash3 me-1"></i>Eliminar amigo</button>
+                                </form>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+        }
+    }
+</div>
+
+
+<div class="text-center">
+    <p class="fw-normal">Publicaciones amigos</p>
+</div>
+
+
+<div class="container mt-4">
+
+    @if (Model.Publication == null || Model.Publication.Count == 0)
+    {
+        <div class="text-center mt-5">
+            <h5 class="text-muted">No hay publicaciones</h5>
+        </div>
+    }
+    else
+    {
+        foreach (var item in Model.Publication)
+        {
+            <div class="row mb-5 align-items-stretch">
+
+                <!-- Publicación -->
+                <div class="col-md-6">
+                    <div class="card h-100 shadow-sm border-0">
+                        <div class="card-body bg-light rounded-top">
+                            <h5 class="card-title fw-bold">@item.Name</h5>
+                            <p class="card-text text-muted mb-0">
+                                <i class="bi bi-person-circle me-1"></i> @item.UserName |
+                                <i class="bi bi-calendar-event me-1"></i> @item.CreateAt.ToString("dd/MM/yyyy")
+                            </p>
+                        </div>
+
+                        @if (item.PublicationType == (int)PublicationType.Imagen)
+                        {
+                            <img src="@item.ImageUrl" class="card-img-bottom rounded-bottom" alt="@item.Name">
+                        }
+                        else if (item.PublicationType == (int)PublicationType.Video)
+                        {
+                            <div class="ratio ratio-16x9 rounded-bottom overflow-hidden">
+                                <iframe src="@item.VideoUrl" title="YouTube video" allowfullscreen></iframe>
+                            </div>
+                        }
+
+                        <div class="card-footer bg-white border-top">
+                            <p class="card-text text-muted mb-2">
+                                <i class="bi bi-chat-left-text me-1"></i> @item.CommentsCount |
+                                <i class="bi bi-hand-thumbs-up me-1"></i> @item.ReacctionsCount
+                            </p>
+
+                            <!-- FORMULARIO: Eliminar reacción existente -->
+                            @if (item.Reaction != null)
+                            {
+                                <form asp-controller="Reaction" asp-action="Delete" method="POST" class="d-inline">
+                                    <input type="hidden" asp-for="@item.Reaction.Id" name="Id" />
+                                    <button type="submit" class="btn btn-outline-success">
+                                        <i class="bi bi-hand-thumbs-up me-1"></i>
+                                        @(item.Reaction.ReactionType == (int)ReactionType.Like ? "Me gusta" : "No me gusta")
+                                    </button>
+                                </form>
+                            }
+                            else
+                            {
+                                <div class="d-flex gap-2 justify-content-center mt-3">
+                                    <!-- FORMULARIO: Crear reacción tipo Me gusta -->
+                                    <form asp-controller="Reaction" asp-action="Create" method="POST" class="d-inline">
+                                        <input type="hidden" asp-for="@Model.CreateReaction!.Id" name="Id" value="0" />
+                                        <input type="hidden" asp-for="@Model.CreateReaction!.IdUser" name="IdUser" />
+                                        <input type="hidden" asp-for="@Model.CreateReaction!.IdPublication" name="IdPublication" value="@item.Id" />
+                                        <input type="hidden" asp-for="@Model.CreateReaction!.ReactionType" name="ReactionType" value="@((int)ReactionType.Like)" />
+                                        <button type="submit" class="btn btn-outline-success">
+                                            <i class="bi bi-hand-thumbs-up me-1"></i> Me gusta
+                                        </button>
+                                    </form>
+
+                                    <!-- FORMULARIO: Crear reacción tipo No me gusta -->
+                                    <form asp-controller="Reaction" asp-action="Create" method="POST" class="d-inline">
+                                        <input type="hidden" asp-for="@Model.CreateReaction!.Id" name="Id" value="0" />
+                                        <input type="hidden" asp-for="@Model.CreateReaction!.IdUser" name="IdUser" />
+                                        <input type="hidden" asp-for="@Model.CreateReaction!.IdPublication" name="IdPublication" value="@item.Id" />
+                                        <input type="hidden" asp-for="@Model.CreateReaction!.ReactionType" name="ReactionType" value="@((int)ReactionType.Dislike)" />
+                                        <button type="submit" class="btn btn-outline-danger">
+                                            <i class="bi bi-hand-thumbs-down me-1"></i> No me gusta
+                                        </button>
+                                    </form>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comentarios -->
+                <div class="col-md-6">
+                    <div class="card h-100 shadow-sm border-0">
+                        <div class="card-header bg-light">
+                            <h6 class="mb-0 fw-bold">Comentarios</h6>
+                        </div>
+
+                        <div class="card-body px-3 py-2" style="max-height: 400px; overflow-y: auto;">
+                            @if (item.PostCommen == null || item.PostCommen.Count == 0)
+                            {
+                                <p class="text-muted text-center mt-3">No hay comentarios aún</p>
+                            }
+                            else
+                            {
+                                @foreach (var comment in item.PostCommen)
+                                {
+                                    <div class="mb-3 pb-2 border-bottom">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <img src="@comment.ProfileImage" class="img-thumbnail rounded-circle" alt="Foto de perfil" width="32" height="32" />
+                                            <h6 class="mb-0 fw-semibold">@comment.UserName</h6>
+                                        </div>
+                                        <p class="mb-1 ms-4">@comment.Text</p>
+
+                                        <!-- Respuestas -->
+                                        @if (comment.ReplyCommen != null && comment.ReplyCommen.Count > 0)
+                                        {
+                                            <div class="ms-5 mt-2">
+                                                @foreach (var reply in comment.ReplyCommen)
+                                                {
+                                                    <div class="d-flex align-items-center gap-2 mb-1">
+                                                        <img src="@reply.ProfileImage" class="img-thumbnail" alt="Foto de perfil" width="28" height="28" />
+                                                        <small class="fw-semibold">@reply.UserName</small>
+                                                    </div>
+                                                    <p class="ms-5 mb-2 text-muted">@reply.ReplyComment</p>
+                                                }
+                                            </div>
+                                        }
+
+                                        <!-- FORMULARIO: Crear respuesta -->
+                                        <div class="mt-2">
+                                            <form asp-controller="Reply" asp-action="Create" method="POST">
+                                                <input type="hidden" asp-for="@Model.CreateReply!.Id" name="Id" />
+                                                <input type="hidden" asp-for="@Model.CreateReply!.IdUser" name="IdUser" />
+                                                <input type="hidden" asp-for="@Model.CreateReply!.IdPostComment" name="IdPostComment" value="@comment.Id" />
+                                                <div class="form-floating mb-2">
+                                                    <textarea asp-for="@Model.CreateReply!.ReplyComment" name="ReplyComment" class="form-control" placeholder="Deja una respuesta" id="floatingTextarea"></textarea>
+                                                    <span asp-validation-for="@Model.CreateReply!.ReplyComment" class="text-danger"></span>
+                                                </div>
+                                                <button type="submit" class="btn btn-outline-primary float-end">
+                                                    <i class="bi bi-floppy2 me-1"></i> Save
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+
+                        <!-- FORMULARIO: Crear comentario -->
+                        <div class="card-footer bg-light">
+                            <form asp-controller="PostCommen" asp-action="Create" method="POST">
+                                <input type="hidden" asp-for="@Model.CreateCommen!.Id" name="Id" />
+                                <input type="hidden" asp-for="@Model.CreateCommen!.IdUser" name="IdUser" />
+                                <input type="hidden" asp-for="@Model.CreateCommen!.IdPublication" name="IdPublication" value="@item.Id" />
+                                <div class="form-floating mb-2">
+                                    <textarea asp-for="CreateCommen.Text" name="Text" class="form-control" placeholder="Deja un comentario" id="floatingTextarea"></textarea>
+                                    <label asp-for="CreateCommen.Text" for="floatingTextarea">Comentar</label>
+                                    <span asp-validation-for="CreateCommen.Text" class="text-danger"></span>
+                                </div>
+                                <button type="submit" class="btn btn-outline-primary float-end">
+                                    <i class="bi bi-floppy2 me-1"></i> Save
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        }
+    }
+</div>

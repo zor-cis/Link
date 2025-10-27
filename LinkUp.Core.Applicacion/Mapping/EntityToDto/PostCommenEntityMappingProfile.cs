@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using LinkUp.Core.Applicacion.Dtos.PostCommen;
-using LinkUp.Core.Applicacion.Dtos.Publication;
 using LinkUp.Core.Domain.Entities;
 
 namespace LinkUp.Core.Applicacion.Mapping.EntityToDto

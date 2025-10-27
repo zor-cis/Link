@@ -1,5 +1,4 @@
-﻿
-using LinkUp.Core.Domain.Interfaces;
+﻿using LinkUp.Core.Domain.Interfaces;
 using LinkUp.Infrastructure.Persistence.Contexts;
 using LinkUp.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -42,6 +41,13 @@ namespace LinkUp.Infrastructure.Persistence
             service.AddScoped<IPublicationRepository, PublicationRepository>();
             service.AddScoped<IPostCommenRepository, PostCommenRepository>();
             service.AddScoped<IReactionRepository, ReactionRepository>();
+            service.AddScoped<IReplyRepository, ReplyRepository>();
+            service.AddScoped<IFriendshipRequestRepository, FriendshipRequestRepository>();
+            service.AddScoped<IBattleshipGameRepository, BattleshipGameRepository>();
+            service.AddScoped<IBattleshipBoardRepository, BattleshipBoardRepository>();
+            service.AddScoped<IShipRepository, ShipRepository>();
+            service.AddScoped<ICellRepository, CellRepository>();
+            service.AddScoped<IAttackRepository, AttackRepository>();
 
             #endregion
         }

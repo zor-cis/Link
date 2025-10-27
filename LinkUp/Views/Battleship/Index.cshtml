@@ -1,0 +1,18 @@
+﻿@model HomeViewModel
+
+@{
+    ViewData["Title"] = "BattleShip";
+}
+
+<div class="float-end">
+    <a asp-controller="Battleship" asp-action="NewGame" class="btn btn-outline-secondary position-fixed">Iniciar un nuevo juego </a>
+</div>
+
+<div class="text-center">
+    <h1 class="fw-normal">Juego de Battleship</h1>
+    <p>@User.Identity?.Name</p> 
+</div>
+
+<div class="container mt-4">
+
+</div>

@@ -1,0 +1,66 @@
+﻿@model NewFriendshipRequestViewModel
+
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="float-end">
+    <a asp-controller="FriendshipRequest" asp-action="Create" class="btn btn-outline-secondary position-fixed">Agregar un nuevo amigo</a>
+</div>
+
+<div class="text-center">
+    <h1 class="display-4">Nuevo amigo</h1>
+</div>
+
+
+<div>
+    @if(Model.nonFriend == null || Model.nonFriend!.Count == 0)
+    {
+        <div class="text-center mt-5">
+            <h5 class="text-muted">No hay usuarios para agregar</h5>
+        </div>
+    }
+    else
+    {
+        foreach(var item in Model.nonFriend)
+        {
+            <div class="row">
+                <table class="table table-striped-columns">
+
+                    <thead>
+                        <tr>
+                            <th scope="col">Foto de perfil</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Apellido</th>
+                            <th scope="col">Nombre de usuario</th>
+                            <th scope="col">----</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <th scope="row">
+                                <img src="/@item.ProfileImage" class="img-thumbnail" alt="Foto de perfil" width="50" height="50" />
+                            </th>
+                            <td>@item.Name</td>
+                            <td>@item.LastName</td>
+                            <td>@item.UserName</td>
+                            <td>
+                                <form asp-controller="FriendshipRequest" asp-action="AddFriend" method="POST">
+                                    <input type="hidden" asp-for="@Model.createFriendship!.Id" name="Id" />
+                                    <input type="hidden" asp-for="@Model.createFriendship!.IdUserRequester" name="IdUserRequester" />
+                                    <input type="hidden" asp-for="@Model.createFriendship!.IdUserAddressee" name="IdUserAddressee" value="@item.Id" />
+                                    <input type="hidden" asp-for="@Model.createFriendship!.FriendshipRequestStatus" name="FriendshipRequestStatus" />
+                                    <button type="submit" class="btn btn-outline-primary float-end"><i class="bi bi-floppy2 me-1"></i> Agregar amigo</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+        }
+    }
+</div>
+

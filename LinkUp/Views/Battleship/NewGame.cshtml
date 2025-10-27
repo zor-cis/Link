@@ -1,0 +1,53 @@
+﻿@model NewGameViewModel
+
+@{
+    ViewData["Title"] = "Nuevo juego";
+}
+
+
+<div class="text-center">
+    <h1 class="fw-normal">Nuevo juego de Battleship</h1>
+
+</div>
+
+<div>
+    @if (Model.Friends == null || Model.Friends!.Count == 0)
+    {
+        <div class="text-center mt-5">
+            <h5 class="text-muted">No hay usuarios con los que jugar</h5>
+        </div>
+    }
+    else
+    {
+        foreach (var item in Model.Friends)
+        {
+            <div class="row">
+                <table class="table table-striped-columns">
+
+                    <thead>
+                        <tr>
+                            <th scope="col">Foto de perfil</th>
+                            <th scope="col">Nombre de usuario</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <th scope="row">
+                                <img src="/@item.ProfileImage" class="img-thumbnail" alt="Foto de perfil" width="50" height="50" />
+                            </th>
+                            <td>@item.UserName</td>
+                            <td>
+                                
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+        }
+    }
+</div>
+
+

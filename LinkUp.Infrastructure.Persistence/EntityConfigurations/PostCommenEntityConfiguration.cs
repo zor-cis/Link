@@ -22,6 +22,15 @@ namespace LinkUp.Infrastructure.Persistence.EntityConfigurations
             builder.Property(x => x.IdPublication).IsRequired();
 
             #endregion
+
+            #region Relations
+
+            builder.HasMany(x => x.Replys)
+                .WithOne(c => c.PostCommen)
+                .HasForeignKey(x => x.IdPostComment)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            #endregion
         }
     }
 }

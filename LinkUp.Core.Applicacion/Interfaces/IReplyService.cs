@@ -6,6 +6,6 @@ namespace LinkUp.Core.Applicacion.Interfaces
 {
     public interface IReplyService : IGenericService<ReplyDto>
     {
-      //  Task<ResponseDto<List<ReplyDto>>?> GetAllByPublicationAsync(int IdComment);
+      Task<ResponseDto<List<ReplyDto>>?> GetAllByCommentAsync(int IdComment);
     }
 }
