@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LinkUp.Core.Applicacion.Services
 {
-    public class BattleshipGameService
+    public class BattleshipGameService : IBattleshipGameService
     {
         private readonly IFriendshipRequestRepository _friendsRepo;
         private readonly IAccountServiceForWebApp _userService;
@@ -50,7 +50,7 @@ namespace LinkUp.Core.Applicacion.Services
                     var opponentUser = await _userService.GetUserById(opponentId);
                     var opponentName = opponentUser!.UserName;
 
-                    var duration = originalGame.EndDate.HasValue? originalGame.EndDate.Value - originalGame.StartDate : TimeSpan.Zero;
+                    var duration = originalGame.EndDate.HasValue ? originalGame.EndDate.Value - originalGame.StartDate : TimeSpan.Zero;
 
                     dtos[i].WinnerName = winnerName;
                     dtos[i].OponentName = opponentName;
@@ -70,7 +70,7 @@ namespace LinkUp.Core.Applicacion.Services
             return response;
         }
 
-        public async Task<ResponseDto<List<ActiveGameBattleshipDto>>> GetPenddingGameAsync(string userId) 
+        public async Task<ResponseDto<List<ActiveGameBattleshipDto>>> GetPenddingGameAsync(string userId)
         {
             var response = new ResponseDto<List<ActiveGameBattleshipDto>>();
 
@@ -80,7 +80,7 @@ namespace LinkUp.Core.Applicacion.Services
 
                 var dtos = _Mapper.Map<List<ActiveGameBattleshipDto>>(games);
 
-                for(int i = 0; i < dtos.Count; i++)
+                for (int i = 0; i < dtos.Count; i++)
                 {
                     var originalGame = games[i];
                     var opponentId = originalGame.Player1Id == userId ? originalGame.Player2Id : originalGame.Player1Id;
@@ -111,8 +111,8 @@ namespace LinkUp.Core.Applicacion.Services
             {
                 var game = await _battleshipGameRepo.GetQuery().Include(g => g.Boards).FirstOrDefaultAsync(g => g.Id == gameId);
 
-                if (game == null || game.GameStatus == (int)GameStatus.Completed) 
-                { 
+                if (game == null || game.GameStatus == (int)GameStatus.Completed)
+                {
                     response.IsError = true;
                     response.MessageResult = "Partida no encontrada o ya finalizada";
                     return response;
@@ -203,6 +203,78 @@ namespace LinkUp.Core.Applicacion.Services
             }
         }
 
+        public async Task<bool> IsBoardReadyAsync(int boardId)
+        {
+            var board = await _battleshipBoardRepo.GetQuery().Include(b => b.Ships).FirstOrDefaultAsync(b => b.Id == boardId);
+
+            if (board == null || board.Ships == null || board.Ships.Count == 0)
+            {
+                return false;
+            }
+
+            return board.Ships.All(s => s.IsPlaced);
+        }
+
+        public async Task<bool> CheckBothBoardsReadyAsync(int gameId)
+        {
+            var game = await _battleshipGameRepo.GetQuery().Include(g => g.Boards!).ThenInclude(b => b.Ships).FirstOrDefaultAsync(g => g.Id == gameId);
+
+            if (game == null || game.Boards == null || game.Boards.Count != 2)
+            {
+                return false;
+            }
+
+            var bothReady = game.Boards.All(b => b.Ships != null && b.Ships.All(s => s.IsPlaced));
+            if (bothReady && game.GameStatus == (int)GameStatus.SettingUp)
+            {
+                game.GameStatus = (int)GameStatus.InProgress;
+                await _battleshipGameRepo.UpdateAsync(game.Id, game);
+            }
+
+            return bothReady;
+        }
+
+        public async Task<ResponseDto<List<ConfiguredShipDto>>> GetConfiguredBoardAsync(int boardId)
+        {
+            var response = new ResponseDto<List<ConfiguredShipDto>>();
+
+            try
+            {
+                var ships = await _battleshipBoardRepo.GetQuery()
+                    .Include(b => b.Ships)
+                    .Where(b => b.Id == boardId)
+                    .SelectMany(b => b.Ships!)
+                    .Where(s => s.IsPlaced)
+                    .ToListAsync();
+
+                response.Result = _Mapper.Map<List<ConfiguredShipDto>>(ships);
+            }
+            catch (Exception ex)
+            {
+                response.IsError = true;
+                response.MessageResult = ex.Message;
+            }
+
+            return response;
+        }
+
+        public async Task<bool> GetBoardStatusAsync(int boardId)
+        {
+            var board = await _battleshipBoardRepo.GetQuery()
+                .Include(b => b.Ships)
+                .FirstOrDefaultAsync(b => b.Id == boardId);
+
+            if (board == null || board.Ships == null || board.Ships.Count == 0)
+            {
+                return false;
+            }
+
+            return board.Ships.All(s => s.IsPlaced);
+        }
+
+
+
+
 
         private List<(int x, int y)> GetShipCells(int startX, int startY, int size, int direction)
         {
@@ -212,10 +284,10 @@ namespace LinkUp.Core.Applicacion.Services
                 int x = startX, y = startY;
                 switch (direction)
                 {
-                    case (int)Direction.Up: y -= i; break; 
-                    case (int)Direction.Down: y += i; break; 
-                    case (int)Direction.Left: x -= i; break; 
-                    case (int)Direction.Right: x += i; break; 
+                    case (int)Direction.Up: y -= i; break;
+                    case (int)Direction.Down: y += i; break;
+                    case (int)Direction.Left: x -= i; break;
+                    case (int)Direction.Right: x += i; break;
                 }
                 cells.Add((x, y));
             }

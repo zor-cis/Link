@@ -22,6 +22,7 @@ namespace LinkUp.Core.Applicacion
             service.AddScoped<IFriendshipRequestService, FriendshipRequestService>();
             service.AddScoped<IFriendService, FriendService>();
             service.AddScoped<ISettingGameBattleShipService, SettingGameBattleShipService>();
+            service.AddScoped<IBattleshipGameService, BattleshipGameService>();
 
             #endregion
         }

@@ -5,49 +5,51 @@
 }
 
 
-<div class="text-center">
+<div class="text-center mb-4">
     <h1 class="fw-normal">Nuevo juego de Battleship</h1>
-
 </div>
 
-<div>
-    @if (Model.Friends == null || Model.Friends!.Count == 0)
-    {
-        <div class="text-center mt-5">
-            <h5 class="text-muted">No hay usuarios con los que jugar</h5>
+@if (Model.Friends == null || Model.Friends.Count == 0)
+{
+    <div class="text-center mt-5">
+        <h5 class="text-muted">No hay usuarios con los que jugar</h5>
+    </div>
+}
+else
+{
+    <form asp-controller="Battleship" asp-action="NewGame" method="post">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Seleccionar</th>
+                    <th>Foto de perfil</th>
+                    <th>Nombre de usuario</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Friends)
+                {
+                    <tr>
+                        <td>
+                            <input type="radio" name="Player2Id" value="@item.Id" required />
+                        </td>
+                        <td>
+                            <img src="/@item.ProfileImage" class="img-thumbnail" alt="Foto de perfil" width="50" height="50" />
+                        </td>
+                        <td>@item.UserName</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <input type="hidden" asp-for="@Model.createGame!.Id" name="Id" />
+        <input type="hidden" asp-for="@Model.createGame!.Player1Id" name="Player1Id" />
+        <input type="hidden" asp-for="@Model.createGame!.CreateAt" name="CreateAt" />
+
+
+        <div class="mt-3 text-center">
+            <button type="submit" class="btn btn-success">Iniciar partida</button>
+            <a asp-action="Index" class="btn btn-secondary ms-2">Volver atrás</a>
         </div>
-    }
-    else
-    {
-        foreach (var item in Model.Friends)
-        {
-            <div class="row">
-                <table class="table table-striped-columns">
-
-                    <thead>
-                        <tr>
-                            <th scope="col">Foto de perfil</th>
-                            <th scope="col">Nombre de usuario</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        <tr>
-                            <th scope="row">
-                                <img src="/@item.ProfileImage" class="img-thumbnail" alt="Foto de perfil" width="50" height="50" />
-                            </th>
-                            <td>@item.UserName</td>
-                            <td>
-                                
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-
-        }
-    }
-</div>
-
-
+    </form>
+}

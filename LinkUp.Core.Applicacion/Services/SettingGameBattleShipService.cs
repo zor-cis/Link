@@ -8,7 +8,6 @@ using LinkUp.Core.Domain.Common.Enum;
 using LinkUp.Core.Domain.Entities;
 using LinkUp.Core.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Xml.Linq;
 
 namespace LinkUp.Core.Applicacion.Services
 {
