@@ -14,6 +14,7 @@ namespace LinkUp.Core.Applicacion.Mapping.EntityToDto
                .ReverseMap();
              
             CreateMap<ActiveGameBattleshipDto, ActiveGameBattleshipViewModel>()
+                .ForMember(x => x.GameId, opt => opt.MapFrom(j => j.GameId))
                .ReverseMap();
 
             CreateMap<CreateBattleshipDto, CreateBattleshipViewModel>()

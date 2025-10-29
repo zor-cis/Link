@@ -27,6 +27,7 @@ namespace LinkUp.Core.Applicacion.Mapping.EntityToDto
                 .ForMember(dest => dest.Duration, opt => opt.Ignore());
 
             CreateMap<BattleshipGame, ActiveGameBattleshipDto>()
+                .ForMember(dest => dest.GameId, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.OponnetName, opt => opt.Ignore())
                 .ForMember(dest => dest.IsConfigurationPhase, opt => opt.Ignore());
 
@@ -41,6 +42,12 @@ namespace LinkUp.Core.Applicacion.Mapping.EntityToDto
                 .ForMember(dest => dest.IsPlaced, opt => opt.MapFrom(_ => true))
                 .ForMember(dest => dest.IsSunk, opt => opt.Ignore())
                 .ForMember(dest => dest.Board, opt => opt.Ignore());
+
+            CreateMap<BattleshipBoard, EnterBattleshipDto>()
+                .ForMember(dest => dest.BoardId, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.GameId, opt => opt.Ignore()) 
+                .ForMember(dest => dest.IsConfigurationPhase, opt => opt.Ignore()); 
+
         }
     }
 }

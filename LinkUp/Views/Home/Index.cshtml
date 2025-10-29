@@ -45,9 +45,15 @@
                         }
                         else if (item.PublicationType == (int)PublicationType.Video)
                         {
-                            string embedUrl = item.VideoUrl!.Contains("watch?v=")
-                            ? item.VideoUrl.Replace("watch?v=", "embed/")
-                            : item.VideoUrl;
+                            string embedUrl = item.VideoUrl!;
+                            if (embedUrl.Contains("youtube.com/watch?v="))
+                            {
+                                embedUrl = embedUrl.Replace("watch?v=", "embed/");
+                            }
+                            else if (embedUrl.Contains("youtu.be/"))
+                            {
+                                embedUrl = embedUrl.Replace("youtu.be/", "youtube.com/embed/");
+                            }
 
                             <div class="ratio ratio-16x9 rounded-bottom overflow-hidden">
                                 <iframe src="@embedUrl" title="YouTube video" allowfullscreen></iframe>
