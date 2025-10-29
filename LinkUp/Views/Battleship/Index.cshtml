@@ -41,7 +41,7 @@
                             <td>
                                 @if(item.IsConfigurationPhase == true)
                                 {
-                                    <a asp-controller="" asp-action="" class="btn btn-outline-warning float-end me-2"><i class="bi bi-arrow-left-short"></i>Seguir Configurando</a>
+                                    <a asp-controller="Battleship" asp-action="SelectShip" asp-route-GameId="@item.GameId" class="btn btn-outline-warning float-end me-2"><i class="bi bi-arrow-left-short"></i>Seguir Configurando</a>
 
                                 }else
                                 {

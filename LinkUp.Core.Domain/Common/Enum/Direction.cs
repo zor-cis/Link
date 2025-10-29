@@ -2,7 +2,8 @@
 {
    public enum Direction
     {
-        Up = 0, //arriba
+
+        Up = 1, //arriba
         Down, //abajo
         Left, //izquierda
         Right //derecha

@@ -1,0 +1,33 @@
+﻿@model PlaceShipViewModel
+
+<div class="container mt-4">
+    <h2>Posicionar barco de tamaño @Model.ShipSize</h2>
+
+    <form asp-action="PlaceShip" method="post">
+        <input type="hidden" name="BoardId" value="@Model.BoardId" />
+        <input type="hidden" name="ShipSize" value="@Model.ShipSize" />
+        <input type="hidden" name="GameId" value="@Model.GameId" />
+
+        <div class="mb-3">
+            <label for="StartX">Coordenada X (0–11):</label>
+            <input type="number" name="StartX" id="StartX" class="form-control" min="0" max="11" required />
+        </div>
+
+        <div class="mb-3">
+            <label for="StartY">Coordenada Y (0–11):</label>
+            <input type="number" name="StartY" id="StartY" class="form-control" min="0" max="11" required />
+        </div>
+
+        <div class="mb-3">
+            <label for="Direction">Dirección:</label>
+            <select name="Direction" id="Direction" class="form-select" required>
+                <option value="0">Arriba</option>
+                <option value="1">Abajo</option>
+                <option value="2">Izquierda</option>
+                <option value="3">Derecha</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Colocar barco</button>
+    </form>
+</div>

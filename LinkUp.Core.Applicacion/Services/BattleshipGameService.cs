@@ -179,10 +179,9 @@ namespace LinkUp.Core.Applicacion.Services
                     return false;
                 }
 
-                var occupiedCells = board.Ships
-                    .Where(s => s.IsPlaced)
-                    .SelectMany(s => GetShipCells(s.StartX!.Value, s.StartY!.Value, s.Size, s.Direction))
-                    .ToHashSet();
+                var occupiedCells = board.Ships.Where(s => s.IsPlaced && s.Direction.HasValue)
+                .SelectMany(s => GetShipCells(s.StartX!.Value, s.StartY!.Value, s.Size, s.Direction!.Value))
+                .ToHashSet();
 
                 var newShipCells = GetShipCells(dto.StartX, dto.StartY, dto.ShipSize, dto.Direction);
 

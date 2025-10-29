@@ -20,7 +20,7 @@ namespace LinkUp.Infrastructure.Persistence.EntityConfigurations
             builder.Property(x => x.Size).IsRequired();
             builder.Property(x => x.StartX).IsRequired(false);
             builder.Property(x => x.StartX).IsRequired(false);
-            builder.Property(x => x.Direction).IsRequired();
+            builder.Property(x => x.Direction).IsRequired(false);
             builder.Property(x => x.IsPlaced).IsRequired();
             builder.Property(x => x.IsSunk).IsRequired();
 

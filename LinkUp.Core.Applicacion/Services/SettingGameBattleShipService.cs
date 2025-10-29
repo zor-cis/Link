@@ -17,15 +17,17 @@ namespace LinkUp.Core.Applicacion.Services
         private readonly IAccountServiceForWebApp _userService;
         private readonly IBattleshipGameRepository _battleshipGameRepo;
         private readonly IBattleshipBoardRepository _battleshipBoardRepo;
+        private readonly IShipRepository _shipRepo;
         private readonly IMapper _Mapper;
 
-        public SettingGameBattleShipService(IFriendshipRequestRepository friendsRepo, IAccountServiceForWebApp userService, IMapper mapper, IBattleshipGameRepository battleshipGameRepo, IBattleshipBoardRepository battleshipBoardRepo)
+        public SettingGameBattleShipService(IFriendshipRequestRepository friendsRepo, IAccountServiceForWebApp userService, IMapper mapper, IBattleshipGameRepository battleshipGameRepo, IBattleshipBoardRepository battleshipBoardRepo, IShipRepository shipRepo)
         {
             _friendsRepo = friendsRepo;
             _userService = userService;
             _Mapper = mapper;
             _battleshipGameRepo = battleshipGameRepo;
             _battleshipBoardRepo = battleshipBoardRepo;
+            _shipRepo = shipRepo;
         }
 
         public async Task<ResponseDto<List<UserDto>>> GetFriendsForBattleShipGame(string UserId)
@@ -137,6 +139,26 @@ namespace LinkUp.Core.Applicacion.Services
                     UserId = dto.Player2Id
                 };
                 await _battleshipBoardRepo.AddRangeAsync(new List<BattleshipBoard> { boardPlayer1, boardPlayer2 });
+
+                var shipsPlayer1 = new List<Ship>
+                {
+                    new() {Id = 0, Size = 2, IsPlaced = false, BoardId = boardPlayer1.Id},
+                    new() {Id = 0,  Size = 3, IsPlaced = false, BoardId = boardPlayer1.Id},
+                    new() {Id = 0, Size = 3, IsPlaced = false, BoardId = boardPlayer1.Id},
+                    new() {Id = 0, Size = 4, IsPlaced = false, BoardId = boardPlayer1.Id},
+                    new() {Id = 0, Size = 5, IsPlaced = false, BoardId = boardPlayer1.Id},
+                };
+
+                var shipsPlayer2 = new List<Ship>
+                {
+                    new() {Id = 0, Size = 2, IsPlaced = false, BoardId = boardPlayer2.Id},
+                    new() {Id = 0, Size = 3, IsPlaced = false, BoardId = boardPlayer2.Id},
+                    new() {Id = 0, Size = 3, IsPlaced = false, BoardId = boardPlayer2.Id},
+                    new() {Id = 0, Size = 4, IsPlaced = false, BoardId = boardPlayer2.Id},
+                    new() {Id = 0, Size = 5, IsPlaced = false, BoardId = boardPlayer2.Id},
+                };
+
+                await _shipRepo.AddRangeAsync(shipsPlayer1.Concat(shipsPlayer2).ToList());
 
                 var resultBoardPlayer = currentUser == dto.Player1Id ? boardPlayer1 : boardPlayer2;
 

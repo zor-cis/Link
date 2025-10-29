@@ -1,5 +1,5 @@
 using AutoMapper;
-using LinkUp.Core.Applicacion.Dtos.PostCommen;
+using LinkUp.Core.Applicacion.Dtos.Battleship;
 using LinkUp.Core.Applicacion.Dtos.Reply;
 using LinkUp.Core.Applicacion.Interfaces;
 using LinkUp.Core.Applicacion.ViewModel.BattleShip;
@@ -101,6 +101,77 @@ namespace LinkUp.Controllers
 
             return RedirectToRoute(new { controller = "Battleship", action = "Index" });
         }
+        
+        public async Task<IActionResult> SelectShip(int GameId) 
+        {
+            AppUser? userSession = await _userManager.GetUserAsync(User);
+
+            if (userSession == null)
+            {
+                return RedirectToRoute(new { controller = "Login", action = "Index" });
+            }
+
+            var enterGame = await _game.EnterGameAsync(GameId, userSession.Id);
+            if(enterGame == null || enterGame.IsError)
+            {
+                TempData["ErrorMessage"] = enterGame?.MessageResult ?? "Error desconocido al entrar al juego.";
+                return RedirectToRoute(new { controller = "Battleship", action = "Index" });
+            }
+
+            var penddingShip = await _game.GetPendingShipsAsync(enterGame.Result!.BoardId);
+
+            var SelectShipVm = new SelectShipViewModel
+            { 
+                GameId = GameId,
+                BoardId = enterGame.Result.BoardId,
+                IsConfigurationPhase = !enterGame.Result.IsConfigurationPhase,
+                PendingShips = _mapper.Map<List<PendingShipViewModel>>(penddingShip.Result ?? new())
+            };
+
+            return View("SelectShip", SelectShipVm);
+        }
+
+        [HttpPost]
+        public IActionResult SelectCell(int gameId, int boardId, int shipSize)
+        {
+            var vm = new PlaceShipViewModel
+            {
+                GameId = gameId,
+                BoardId = boardId,
+                ShipSize = shipSize
+            };
+
+            return View("SelectCell", vm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PlaceShip(PlaceShipViewModel vm)
+        {
+
+            var userSession = await _userManager.GetUserAsync(User);
+            if (userSession == null)
+            {
+                return RedirectToRoute(new { controller = "Login", action = "Index" });
+            }
+
+            var dto = _mapper.Map<PlaceShipDto>(vm);
+
+            var success = await _game.PlaceShipAsync(dto);
+            if (!success)
+            {
+                TempData["ErrorMessage"] = "No se pudo colocar el barco. Verifica la posición y dirección.";
+                return RedirectToAction("SelectCell", new { gameId = vm.GameId, boardId = vm.BoardId, shipSize = vm.ShipSize });
+            }
+
+            var isBoardReady = await _game.IsBoardReadyAsync(vm.BoardId);
+            if (isBoardReady)
+            {
+                await _game.CheckBothBoardsReadyAsync(vm.GameId);
+            }
+
+            return RedirectToAction("SelectShip", new { GameId = vm.GameId });
+        }
+
 
 
     }

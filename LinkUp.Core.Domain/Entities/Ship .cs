@@ -12,7 +12,7 @@ namespace LinkUp.Core.Domain.Entities
         public int? StartX { get; set; }
         public int? StartY { get; set; }
 
-        public required int Direction { get; set; }
+        public int? Direction { get; set; }
         public bool IsPlaced { get; set; }
         public bool IsSunk { get; set; }
 
